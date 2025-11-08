@@ -16,7 +16,7 @@
 
         public function login($email, $password) {
             if ($this->conn->connect_error) {
-                header('Location: ../views/login.html?error=connection');
+                header('Location: /Enevo_Proyecto_Final/views/login.html?error=connection');
                 exit();
             }
             
@@ -28,11 +28,13 @@
             $results = $prepared_query->get_result();
             $users = $results->fetch_all(MYSQLI_ASSOC);
 
+			
+
             if (count($users) > 0) {
-                header('Location: ../views/principal.html');
+                header('Location: /Enevo_Proyecto_Final/views/principal.html');
                 exit();
             } else {
-                header('Location: ../views/login.html?error=login');
+                header('Location: /Enevo_Proyecto_Final/views/login.html?error=login');
                 exit();
             }
         }

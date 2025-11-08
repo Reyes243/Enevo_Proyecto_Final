@@ -53,8 +53,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     form.addEventListener("submit", function (e) {
-      e.preventDefault();
-
       removeError(emailInput);
       removeError(passInput);
 
@@ -64,30 +62,16 @@ document.addEventListener("DOMContentLoaded", function () {
       let hasError = false;
 
       if (!email) {
+        e.preventDefault();
         showError(emailInput, "El correo es obligatorio.");
-        hasError = true;
-      } else if (!isValidEmail(email)) {
-        showError(emailInput, "Ingresa un correo válido.");
         hasError = true;
       }
 
       if (!password) {
+        e.preventDefault();
         showError(passInput, "La contraseña es obligatoria.");
         hasError = true;
-      } else if (password.length < 6) {
-        showError(passInput, "La contraseña debe tener al menos 6 caracteres.");
-        hasError = true;
       }
-
-      if (hasError) return;
-
-      setLoading(true);
-
-      setTimeout(() => {
-        setLoading(false);
-        // Aquí iría la conexión real con PHP en el futuro
-        window.location.href = "principal.html";
-      }, 700);
     });
   }
 });
