@@ -16,10 +16,10 @@
             <img src="../assets/img/LogoEnevo.png" alt="Logo Enevo" class="login-logo" />
             <h3>Crear una cuenta</h3>
 
-            <form action="../assets/app/AuthController.php" method="POST">
+            <form action="../assets/app/controllers/AuthController.php" method="POST">
                 <input type="hidden" name="action" value="register" />
 
-                <input type="text" name="name" placeholder="Nombre" required />
+                <input type="text" name="nombre" placeholder="Nombre" required />
                 <input type="email" name="email" placeholder="Correo Electrónico" required />
                 <input type="password" name="password" placeholder="Contraseña" required />
                 <input type="password" name="confirm_password" placeholder="Confirmar Contraseña" required />
@@ -27,6 +27,7 @@
                 <button type="submit" class="btn-login">Registrarse</button>
             </form>
             <script src="../assets/js/main.js"></script>
+        </div>
 </body>
 
 </html>

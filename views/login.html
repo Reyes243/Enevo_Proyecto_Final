@@ -1,49 +1,70 @@
 <!DOCTYPE html>
 <html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Enevo</title>
+    <link rel="stylesheet" href="../assets/style/main.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login - Enevo</title>
-  <link rel="stylesheet" href="../assets/style/main.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-</head>
+  <body>
+    <!-- ====== CONTENEDOR PRINCIPAL ====== -->
+    <div class="login-container">
+      <div class="login-box">
+        <img
+          src="../assets/img/LogoEnevo.png"
+          alt="Logo Enevo"
+          class="login-logo"
+        />
+        <h3>Iniciar sesión</h3>
 
-<body>
-  <!-- ====== CONTENEDOR PRINCIPAL ====== -->
-  <div class="login-container">
-    <div class="login-box">
-      <img src="../assets/img/LogoEnevo.png" alt="Logo Enevo" class="login-logo" />
-      <h3>Iniciar sesión</h3>
+        <form
+          action="../assets/app/controllers/AuthController.php"
+          method="POST"
+        >
+          <input type="hidden" name="action" value="login" />
+          <input
+            type="email"
+            name="email"
+            placeholder="Correo Electrónico"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Contraseña"
+            required
+          />
+          <button type="submit" class="btn-login">Iniciar Sesión</button>
+        </form>
 
-      <form action="../assets/app/AuthController.php" method="POST">
-        <input type="hidden" name="action" value="login" />
-        <input type="email" name="email" placeholder="Correo Electrónico" required />
-        <input type="password" name="password" placeholder="Contraseña" required />
-        <button type="submit" class="btn-login">Iniciar Sesión</button>
-      </form>
+        <div class="divider">
+          <hr />
+          <span>o</span>
+          <hr />
+        </div>
 
-      <div class="divider">
-        <hr />
-        <span>o</span>
-        <hr />
+        <button
+          class="btn-register"
+          onclick="window.location.href='registro.html'"
+        >
+          Registrarse
+        </button>
       </div>
-
-      <button class="btn-register" onclick="window.location.href='registro.html'">
-        Registrarse
-      </button>
     </div>
-  </div>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-logo">
-        <img src="../assets/img/LogoEnevo.png" alt="Logo Enevo" />
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-logo">
+          <img src="../assets/img/LogoEnevo.png" alt="Logo Enevo" />
+        </div>
+        <p>© 2025 - Todos los derechos reservados</p>
       </div>
-      <p>© 2025 - Todos los derechos reservados</p>
-    </div>
-  </footer>
-  <script src="../assets/js/main.js"></script>
-</body>
-
+    </footer>
+    <script src="../assets/js/main.js"></script>
+  </body>
 </html>
