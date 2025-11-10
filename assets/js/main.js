@@ -1,13 +1,16 @@
-//mezLsqc8B3X
-
 // assets/js/main.js
 document.addEventListener("DOMContentLoaded", function () {
-  // ====== VALIDACIÓN DEL LOGIN ======
-  const form = document.querySelector(".login-box form");
-  if (form) {
-    const emailInput = form.querySelector('input[type="email"]');
-    const passInput = form.querySelector('input[type="password"]');
-    const submitBtn = form.querySelector('button[type="submit"]');
+  // ====== VALIDACIÓN LOGIN ======
+  const loginForm = document.querySelector(
+    '.login-box form[action*="AuthController.php"][method="POST"][action$="AuthController.php"]'
+  );
+  if (
+    loginForm &&
+    loginForm.querySelector('input[name="action"][value="login"]')
+  ) {
+    const emailInput = loginForm.querySelector('input[type="email"]');
+    const passInput = loginForm.querySelector('input[type="password"]');
+    const submitBtn = loginForm.querySelector('button[type="submit"]');
 
     function createErrorEl(text) {
       const el = document.createElement("div");
@@ -18,73 +21,139 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function removeError(input) {
       const next = input.nextElementSibling;
-      if (next && next.classList && next.classList.contains("input-error")) {
-        next.remove();
-      }
+      if (next && next.classList.contains("input-error")) next.remove();
       input.classList.remove("has-error");
     }
 
     function showError(input, text) {
       removeError(input);
       input.classList.add("has-error");
-      const err = createErrorEl(text);
-      input.insertAdjacentElement("afterend", err);
+      input.insertAdjacentElement("afterend", createErrorEl(text));
     }
 
     function isValidEmail(email) {
-      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return re.test(String(email).toLowerCase());
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-    function setLoading(isLoading) {
-      if (isLoading) {
-        submitBtn.disabled = true;
-        submitBtn.dataset.orig = submitBtn.innerText;
-        submitBtn.innerText = "Validando...";
-      } else {
-        submitBtn.disabled = false;
-        if (submitBtn.dataset.orig)
-          submitBtn.innerText = submitBtn.dataset.orig;
-      }
-    }
+    [emailInput, passInput].forEach((input) =>
+      input.addEventListener("input", () => removeError(input))
+    );
 
-    [emailInput, passInput].forEach((input) => {
-      input.addEventListener("input", () => removeError(input));
-    });
-
-    form.addEventListener("submit", function (e) {
-      removeError(emailInput);
-      removeError(passInput);
-
-      const email = emailInput.value.trim();
-      const password = passInput.value;
-
+    loginForm.addEventListener("submit", function (e) {
       let hasError = false;
 
-      if (!email) {
-        e.preventDefault();
+      if (!emailInput.value.trim()) {
         showError(emailInput, "El correo es obligatorio.");
+        hasError = true;
+      } else if (!isValidEmail(emailInput.value.trim())) {
+        showError(emailInput, "El formato del correo no es válido.");
         hasError = true;
       }
 
-      if (!password) {
-        e.preventDefault();
+      if (!passInput.value) {
         showError(passInput, "La contraseña es obligatoria.");
         hasError = true;
       }
+
+      if (hasError) e.preventDefault();
     });
   }
-});
 
-// ====== CERRAR SESIÓN (para principal.html) ======
-document.addEventListener("DOMContentLoaded", function () {
+  // ====== VALIDACIÓN REGISTRO ======
+  const registerForm = document.querySelector(
+    '.login-box form[action*="AuthController.php"][method="POST"]'
+  );
+  if (
+    registerForm &&
+    registerForm.querySelector('input[name="action"][value="register"]')
+  ) {
+    const nameInput = registerForm.querySelector('input[name="name"]');
+    const emailInput = registerForm.querySelector('input[name="email"]');
+    const passInput = registerForm.querySelector('input[name="password"]');
+    const confirmInput = registerForm.querySelector(
+      'input[name="confirm_password"]'
+    );
+    const submitBtn = registerForm.querySelector('button[type="submit"]');
+
+    function createErrorEl(text) {
+      const el = document.createElement("div");
+      el.className = "input-error";
+      el.innerText = text;
+      return el;
+    }
+
+    function removeError(input) {
+      const next = input.nextElementSibling;
+      if (next && next.classList.contains("input-error")) next.remove();
+      input.classList.remove("has-error");
+    }
+
+    function showError(input, text) {
+      removeError(input);
+      input.classList.add("has-error");
+      input.insertAdjacentElement("afterend", createErrorEl(text));
+    }
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    [nameInput, emailInput, passInput, confirmInput].forEach((input) =>
+      input.addEventListener("input", () => removeError(input))
+    );
+
+    registerForm.addEventListener("submit", function (e) {
+      let hasError = false;
+
+      if (!nameInput.value.trim()) {
+        showError(nameInput, "El nombre es obligatorio.");
+        hasError = true;
+      }
+
+      if (!emailInput.value.trim()) {
+        showError(emailInput, "El correo es obligatorio.");
+        hasError = true;
+      } else if (!isValidEmail(emailInput.value.trim())) {
+        showError(emailInput, "El formato del correo no es válido.");
+        hasError = true;
+      }
+
+      if (!passInput.value) {
+        showError(passInput, "La contraseña es obligatoria.");
+        hasError = true;
+      } else if (passInput.value.length < 6) {
+        showError(passInput, "La contraseña debe tener al menos 6 caracteres.");
+        hasError = true;
+      }
+
+      if (!confirmInput.value) {
+        showError(confirmInput, "Debes confirmar tu contraseña.");
+        hasError = true;
+      } else if (confirmInput.value !== passInput.value) {
+        showError(confirmInput, "Las contraseñas no coinciden.");
+        hasError = true;
+      }
+
+      // 👇 AGREGA ESTE BLOQUE ABAJO
+      if (!hasError) {
+        e.preventDefault(); // evita que recargue la página
+        alert("Registro exitoso. Serás redirigido al login.");
+        setTimeout(() => {
+          window.location.href = "login.html"; // redirige a login (misma carpeta)
+        }, 1500);
+      }
+
+      if (hasError) e.preventDefault();
+    });
+  }
+
+  // ====== CERRAR SESIÓN ======
   const logoutBtn = document.getElementById("logoutBtn");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", function (e) {
       e.preventDefault();
       sessionStorage.removeItem("Usuario");
       localStorage.removeItem("Usuario");
-      // redirige al index principal
       window.location.href = "../index.html";
     });
   }

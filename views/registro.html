@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro - Enevo</title>
+    <link rel="stylesheet" href="../assets/style/main.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- ====== CONTENEDOR PRINCIPAL ====== -->
+    <div class="login-container">
+        <div class="login-box">
+            <img src="../assets/img/LogoEnevo.png" alt="Logo Enevo" class="login-logo" />
+            <h3>Crear una cuenta</h3>
+
+            <form action="../assets/app/AuthController.php" method="POST">
+                <input type="hidden" name="action" value="register" />
+
+                <input type="text" name="name" placeholder="Nombre" required />
+                <input type="email" name="email" placeholder="Correo Electrónico" required />
+                <input type="password" name="password" placeholder="Contraseña" required />
+                <input type="password" name="confirm_password" placeholder="Confirmar Contraseña" required />
+
+                <button type="submit" class="btn-login">Registrarse</button>
+            </form>
+            <script src="../assets/js/main.js"></script>
+</body>
+
+</html>
