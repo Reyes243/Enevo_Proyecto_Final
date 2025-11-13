@@ -327,6 +327,79 @@ button:hover {
   background-color: #111;
 }
 
+/* ====== REGISTRO (MISMAS DIMENSIONES QUE LOGIN) ====== */
+.register-container {
+  background-color: #363D57;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.register-box {
+  background-color: #1F2833;
+  padding: 40px;
+  width: 320px; /* Igual que el login-box */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.register-logo {
+  width: 120px;
+  height: 100px;
+  margin-bottom: 10px;
+}
+
+.register-box h2 {
+  margin: 0;
+  font-weight: 600;
+  color: #fff;
+  font-size: 1.4rem;
+}
+
+.register-box input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #3C3C3C;
+  background-color: #1F2833;
+  color: #C5C6C7;
+  font-size: 0.95rem;
+}
+
+.btn-register-main {
+  background-color: #FFD700;
+  color: #000;
+  border: none;
+  padding: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-register-main:hover {
+  background-color: #E0B800;
+}
+.text-alt {
+  font-size: 0.7rem;        /* más pequeño */
+  color: #fff;
+  margin-top: 4px;
+  text-align: center;
+  white-space: nowrap;      /* evita que se divida en dos líneas */
+}
+
+.text-alt a {
+  color: #FFD700;
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 0.7rem;        /* igual tamaño */
+}
+
+.text-alt a:hover {
+  text-decoration: underline;
+}
+
 /* ====== RESPONSIVE ====== */
 @media (max-width: 768px) {
   .site-footer .footer-inner {

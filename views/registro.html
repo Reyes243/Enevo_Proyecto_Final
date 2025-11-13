@@ -1,33 +1,48 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Registro - Enevo</title>
-    <link rel="stylesheet" href="../assets/style/main.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro - Enevo</title>
+  <link rel="stylesheet" href="../assets/style/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 </head>
 
 <body>
-    <!-- ====== CONTENEDOR PRINCIPAL ====== -->
-    <div class="login-container">
-        <div class="login-box">
-            <img src="../assets/img/LogoEnevo.png" alt="Logo Enevo" class="login-logo" />
-            <h3>Crear una cuenta</h3>
+  <!-- ====== CONTENEDOR PRINCIPAL ====== -->
+  <div class="register-container">
+    <div class="register-box">
+      <img src="../assets/img/LogoEnevo.png" alt="Logo Enevo" class="register-logo" />
+      <h2>Crear cuenta</h2>
 
-            <form action="../assets/app/controllers/AuthController.php" method="POST">
-                <input type="hidden" name="action" value="register" />
 
-                <input type="text" name="nombre" placeholder="Nombre" required />
-                <input type="email" name="email" placeholder="Correo Electrónico" required />
-                <input type="password" name="password" placeholder="Contraseña" required />
-                <input type="password" name="confirm_password" placeholder="Confirmar Contraseña" required />
+      <form action="../assets/app/controllers/AuthController.php" method="POST">
+        <input type="hidden" name="action" value="register" />
 
-                <button type="submit" class="btn-login">Registrarse</button>
-            </form>
-            <script src="../assets/js/main.js"></script>
-        </div>
+        <input type="text" name="nombre" placeholder="Nombre completo" required />
+        <input type="email" name="email" placeholder="Correo electrónico" required />
+        <input type="password" name="password" placeholder="Contraseña" required />
+        <input type="password" name="confirm_password" placeholder="Confirmar contraseña" required />
+
+        <button type="submit" class="btn-register-main">Registrarse</button>
+      </form>
+
+      <p class="text-alt">
+        ¿Ya tienes una cuenta?
+        <a href="login.html" class="link-login">Iniciar sesión</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <img src="../assets/img/LogoEnevo.png" alt="Logo Enevo" />
+      </div>
+      <p>© 2025 - Todos los derechos reservados</p>
+    </div>
+  </footer>
 </body>
-
 </html>
+
