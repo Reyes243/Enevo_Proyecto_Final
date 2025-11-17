@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Mas Detalles - Dark Souls: Remastered</title>
+    <title>Detalles del Juego</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/style/main.css">
@@ -12,7 +12,7 @@
 
 <body>
 
-    <!-- NAVBAR -->
+ 
     <nav class="navbar">
         <div class="logo">
             <img src="../assets/img/LogoEnevo2.png" alt="Logo Enevo">
@@ -32,54 +32,44 @@
         </div>
     </nav>
 
-    <!-- CONTENIDO -->
+   
     <main class="novedades" style="max-width: 760px;">
         <div class="details-card">
 
-            <h1 class="details-title">Dark Souls: Remastered</h1>
+          
+            <h1 id="game-title" class="details-title"></h1>
 
-            <img class="details-hero" src="../assets/img/DarksoulsRemastered.jpg" alt="Dark Souls Remastered">
+           
+            <img id="game-img" class="details-hero" src="" alt="Juego">
+
+            
             <div class="buy-row">
-
                 <div class="buy-text">
-                    <strong>Comprar DARK SOULS: REMASTERED</strong><br>
+                    <strong id="buy-title"></strong><br>
                     <small>Versión digital · Plataforma: PC</small>
                 </div>
+
                 <div class="buy-actions">
-                    <div class="price-box">
-                        Mex$ 549.00 o 45 Puntos
-                    </div>
+                    <div class="price-box" id="game-price"></div>
                     <button class="btn-buy" id="addCartBtn">Agregar al carrito</button>
-
-                   
-
                 </div>
-
             </div>
+
+           
             <div class="section">
                 <h4>ACERCA DE ESTE JUEGO</h4>
-                <p class="text-muted">
-                    Entonces, hubo fuego. Vuelve a experimentar el juego que definió un género,
-                    remasterizado en alta definición y funcionando a 60 FPS.
-                </p>
-            </div>
-            <div class="section requirements">
-                <h4>REQUISITOS DEL SISTEMA</h4>
-                <ul>
-                    <li><strong>• MÍNIMO</strong></li>
-                    <li>SO: Windows 7 64-bit</li>
-                    <li>CPU: Intel i5-2300 / AMD FX-6300</li>
-                    <li>RAM: 8 GB</li>
-                    <li>GPU: GTX 460 / Radeon HD 6870</li>
-                    <li>DirectX 11</li>
-                    <li>8 GB de espacio disponible</li>
-                </ul>
+                <p class="text-muted" id="game-desc"></p>
             </div>
 
-          
+            
+            <div class="section requirements">
+                <h4>REQUISITOS DEL SISTEMA</h4>
+                <ul id="req-list"></ul>
+            </div>
         </div>
     </main>
 
+   
     <footer class="site-footer" style="margin-top:20px;">
         <div class="footer-inner">
             <div class="footer-logo">
@@ -89,8 +79,9 @@
         </div>
     </footer>
 
-
+  
+    <script src="../assets/js/main.js"></script>
 
 </body>
-
 </html>
+

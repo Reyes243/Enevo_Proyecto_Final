@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <!-- ===== NAVBAR ===== -->
+ 
   <nav class="navbar">
     <div class="logo">
       <img src="../assets/img/LogoEnevo2.png" alt="Logo Enevo">
@@ -18,9 +18,11 @@
     </div>
 
     <div class="nav-links">
+
       <a href="#" class="active">Tienda</a>
       <a href="#">Niveles</a>
       <a href="#">Carrito</a>
+      
       <div class="user-section">
         <span class="user-link">Usuario</span>
         <button id="logoutBtn" class="logout-btn">
@@ -30,13 +32,13 @@
     </div>
   </nav>
 
-  <!-- ===== HERO ===== -->
+  
   <section class="hero">
     <h1>Dark Souls</h1>
     <img src="../assets/img/DarkSoulsGIF.gif" alt="Dark Souls Banner">
   </section>
 
-  <!-- ===== NOVEDADES DESTACADAS ===== -->
+ 
   <section class="novedades">
     <div class="novedades-titulo">
       <h2>Novedades Destacadas</h2>
@@ -47,9 +49,7 @@
       <div class="info">
         <h3>Dark Souls: Remastered</h3>
         <p class="precio"><span>Desde 549 mx</span><br>10 Puntos</p>
-        <button onclick="window.location.href='MasDetallesDarkSouls.html'">
-      Más detalles
-    </button>
+        <button class="btn-mas-detalles" data-juego="darksouls">Más detalles</button>
       </div>
     </div>
 
@@ -58,7 +58,7 @@
       <div class="info">
         <h3>Clair Obscur: Expedition 33</h3>
         <p class="precio"><span>Desde 710 mx</span><br>10 Puntos</p>
-        <button>Más detalles</button>
+        <button class="btn-mas-detalles" data-juego="expedition33">Más detalles</button>
       </div>
     </div>
 
@@ -67,12 +67,12 @@
       <div class="info">
         <h3>Risk of Rain 2</h3>
         <p class="precio"><span>Desde 233 mx</span><br>10 Puntos</p>
-        <button>Más detalles</button>
+        <button class="btn-mas-detalles" data-juego="risk2">Más detalles</button>
       </div>
     </div>
+
   </section>
 
-  <!-- ===== FOOTER ===== -->
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-logo">
@@ -82,7 +82,7 @@
     </div>
   </footer>
 
-  <!-- Script principal -->
+
   <script src="../assets/js/main.js"></script>
 </body>
 
