@@ -1,8 +1,3 @@
-// =======================
-//        MAIN.JS
-//  Archivo unificado
-// =======================
-
 document.addEventListener("DOMContentLoaded", function () {
   // ===========================================================
   //                    VALIDACIÓN LOGIN
