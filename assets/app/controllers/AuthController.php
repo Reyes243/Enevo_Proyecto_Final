@@ -2,8 +2,6 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
-require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/ConnectionController.php';
 require_once __DIR__ . '/../models/UserModel.php';
 
@@ -22,14 +20,14 @@ class AuthController {
         $password = trim($password);
         
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            header('Location: ' . VIEWS_PATH . 'login.html?error=invalid_email');
+            header('Location: ../../../views/login.html?error=invalid_email');
             exit();
         }
         
         $user = $this->userModel->getUserByEmail($email);
         
         if (!$user) {
-            header('Location: ' . VIEWS_PATH . 'login.html?error=login');
+            header('Location: ../../../views/login.html?error=login');
             exit();
         }
         
@@ -43,10 +41,10 @@ class AuthController {
             $_SESSION['user_nombre'] = $user['nombre'];
             $_SESSION['user_email'] = $user['email'];
             
-            header('Location: ' . VIEWS_PATH . 'principal.html');
+            header('Location: ../../../views/principal.html');
             exit();
         } else {
-            header('Location: ' . VIEWS_PATH . 'login.html?error=login');
+            header('Location: ../../../views/login.html?error=login');
             exit();
         }
     }
@@ -57,39 +55,33 @@ class AuthController {
         $password = trim($password);
         
         if ($nombre === '' || $email === '' || $password === '') {
-            header('Location: ' . VIEWS_PATH . 'register.html?error=empty');
+            header('Location: ../../../views/register.html?error=empty');
             exit();
         }
         
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            header('Location: ' . VIEWS_PATH . 'register.html?error=invalid_email');
+            header('Location: ../../../views/register.html?error=invalid_email');
             exit();
         }
         
         if (strlen($password) < 6) {
-            header('Location: ' . VIEWS_PATH . 'register.html?error=weak_password');
+            header('Location: ../../../views/register.html?error=weak_password');
             exit();
         }
         
-        $existingEmail = $this->userModel->getUserByEmail($email);
-        if ($existingEmail) {
-            header('Location: ' . VIEWS_PATH . 'register.html?error=email_exists');
-            exit();
-        }
-        
-        $existingNombre = $this->userModel->getUserByNombre($nombre);
-        if ($existingNombre) {
-            header('Location: ' . VIEWS_PATH . 'register.html?error=nombre_exists');
+        $existing = $this->userModel->getUserByEmail($email);
+        if ($existing) {
+            header('Location: ../../../views/register.html?error=email_exists');
             exit();
         }
         
         $created = $this->userModel->createUser($nombre, $email, $password);
         
         if ($created) {
-            header('Location: ' . VIEWS_PATH . 'login.html?registered=1');
+            header('Location: ../../../views/login.html?registered=1');
             exit();
         } else {
-            header('Location: ' . VIEWS_PATH . 'register.html?error=register_failed');
+            header('Location: ../../../views/register.html?error=register_failed');
             exit();
         }
     }
@@ -108,7 +100,7 @@ if ($action === 'register') {
     $password = $_POST['password'] ?? '';
     $auth->login($email, $password);
 } else {
-    header('Location: ' . VIEWS_PATH . 'login.html');
+    header('Location: ../../../views/login.html');
     exit();
 }
 ?>
