@@ -2,6 +2,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
 require_once __DIR__ . '/../config/ConnectionController.php';
 require_once __DIR__ . '/../models/UserModel.php';
 
@@ -18,19 +19,19 @@ class AuthController {
     public function login($email, $password) {
         $email = trim($email);
         $password = trim($password);
-        
+
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             header('Location: ../../../views/login.html?error=invalid_email');
             exit();
         }
-        
+
         $user = $this->userModel->getUserByEmail($email);
-        
+
         if (!$user) {
             header('Location: ../../../views/login.html?error=login');
             exit();
         }
-        
+
         if (password_verify($password, $user['password'])) {
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
@@ -49,34 +50,46 @@ class AuthController {
         }
     }
     
-    public function register($nombre, $email, $password) {
+    public function register($nombre, $email, $password, $confirm) {
         $nombre = trim($nombre);
         $email = trim($email);
         $password = trim($password);
-        
-        if ($nombre === '' || $email === '' || $password === '') {
+        $confirm = trim($confirm);
+
+
+        // Campos vacíos
+        if ($nombre === '' || $email === '' || $password === '' || $confirm === '') {
             header('Location: ../../../views/register.html?error=empty');
             exit();
         }
-        
+
+        // Email inválido
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             header('Location: ../../../views/register.html?error=invalid_email');
             exit();
         }
-        
+
+       
         if (strlen($password) < 6) {
             header('Location: ../../../views/register.html?error=weak_password');
             exit();
         }
+
+    
+        if ($password !== $confirm) {
+            header('Location: ../../../views/register.html?error=password_mismatch');
+            exit();
+        }
+
         
         $existing = $this->userModel->getUserByEmail($email);
         if ($existing) {
             header('Location: ../../../views/register.html?error=email_exists');
             exit();
         }
-        
+
         $created = $this->userModel->createUser($nombre, $email, $password);
-        
+
         if ($created) {
             header('Location: ../../../views/login.html?registered=1');
             exit();
@@ -91,14 +104,20 @@ $action = $_POST['action'] ?? '';
 $auth = new AuthController();
 
 if ($action === 'register') {
-    $nombre = $_POST['nombre'] ?? '';
-    $email  = $_POST['email'] ?? '';
+    $nombre   = $_POST['nombre'] ?? '';
+    $email    = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
-    $auth->register($nombre, $email, $password);
+    $confirm  = $_POST['confirm_password'] ?? '';
+
+   
+    $auth->register($nombre, $email, $password, $confirm);
+
 } elseif ($action === 'login') {
+
     $email  = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
     $auth->login($email, $password);
+
 } else {
     header('Location: ../../../views/login.html');
     exit();
