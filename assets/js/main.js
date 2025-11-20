@@ -1,5 +1,109 @@
 document.addEventListener("DOMContentLoaded", function () {
   // ===========================================================
+  //       MOSTRAR ERRORES DE PHP EN REGISTRO Y LOGIN
+  // ===========================================================
+  const urlParams = new URLSearchParams(window.location.search);
+  const error = urlParams.get("error");
+  const registered = urlParams.get("registered");
+
+  // Mensajes para errores del servidor
+  const errorMessages = {
+    // Errores de registro
+    empty: "Todos los campos son obligatorios",
+    invalid_email: "El formato del correo no es válido",
+    weak_password: "La contraseña debe tener al menos 6 caracteres",
+    password_mismatch: "Las contraseñas no coinciden",
+    email_exists: "⚠️ Este correo electrónico ya está registrado",
+    username_exists: "⚠️ Este nombre de usuario ya existe",
+    duplicate_data: "⚠️ El correo o nombre de usuario ya están en uso",
+    database: "Error de base de datos. Intenta nuevamente",
+    register_failed: "No se pudo completar el registro",
+
+    // Errores de login
+    login: "Correo o contraseña incorrectos",
+
+    // Errores generales
+    server: "Error del servidor. Intenta más tarde",
+    connection: "No se pudo conectar a la base de datos",
+    invalid_action: "Acción no válida",
+  };
+
+  // Mostrar mensaje de error si existe
+  if (error && errorMessages[error]) {
+    // Crear elemento de alerta
+    const alertDiv = document.createElement("div");
+    alertDiv.className = "alert-error";
+    alertDiv.innerHTML = `
+      <span>${errorMessages[error]}</span>
+      <button class="alert-close">&times;</button>
+    `;
+
+    // Insertar al inicio del body o dentro de .login-box o .register-box
+    const loginBox =
+      document.querySelector(".login-box") ||
+      document.querySelector(".register-box");
+    if (loginBox) {
+      loginBox.insertBefore(alertDiv, loginBox.firstChild);
+    } else {
+      document.body.insertBefore(alertDiv, document.body.firstChild);
+    }
+
+    // Cerrar alerta al hacer clic en X
+    const closeBtn = alertDiv.querySelector(".alert-close");
+    closeBtn.addEventListener("click", () => {
+      alertDiv.remove();
+      // Limpiar URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    });
+
+    // Auto-cerrar después de 5 segundos
+    setTimeout(() => {
+      if (alertDiv.parentElement) {
+        alertDiv.remove();
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname
+        );
+      }
+    }, 5000);
+  }
+
+  // Mostrar mensaje de éxito en registro
+  if (registered === "1") {
+    const successDiv = document.createElement("div");
+    successDiv.className = "alert-success";
+    successDiv.innerHTML = `
+      <span>✓ Registro exitoso. Ya puedes iniciar sesión</span>
+      <button class="alert-close">&times;</button>
+    `;
+
+    const loginBox =
+      document.querySelector(".login-box") ||
+      document.querySelector(".register-box");
+    if (loginBox) {
+      loginBox.insertBefore(successDiv, loginBox.firstChild);
+    }
+
+    const closeBtn = successDiv.querySelector(".alert-close");
+    closeBtn.addEventListener("click", () => {
+      successDiv.remove();
+      window.history.replaceState({}, document.title, window.location.pathname);
+    });
+
+    setTimeout(() => {
+      if (successDiv.parentElement) {
+        successDiv.remove();
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname
+        );
+      }
+    }, 5000);
+  }
+
+  // ===========================================================
   //                    VALIDACIÓN LOGIN
   // ===========================================================
   const loginForm = document.querySelector(
@@ -76,7 +180,9 @@ document.addEventListener("DOMContentLoaded", function () {
     registerForm &&
     registerForm.querySelector('input[name="action"][value="register"]')
   ) {
-    const nameInput = registerForm.querySelector('input[name="name"]');
+    const nameInput =
+      registerForm.querySelector('input[name="name"]') ||
+      registerForm.querySelector('input[name="nombre"]');
     const emailInput = registerForm.querySelector('input[name="email"]');
     const passInput = registerForm.querySelector('input[name="password"]');
     const confirmInput = registerForm.querySelector(
@@ -159,10 +265,14 @@ document.addEventListener("DOMContentLoaded", function () {
   if (logoutBtn) {
     logoutBtn.addEventListener("click", function (e) {
       e.preventDefault();
+
+      // Limpiar localStorage
       sessionStorage.removeItem("Usuario");
       localStorage.removeItem("Usuario");
       localStorage.removeItem("usuarioLogeado");
-      window.location.href = "../index.html";
+
+      // Redirigir al logout de PHP para destruir la sesión
+      window.location.href = "../assets/app/controllers/LogoutController.php";
     });
   }
 
@@ -278,7 +388,8 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
   }
-}); 
+});
+
 // ==========================================================
 //  CARGAR DATOS EN MasDetallesNoLogin.html
 // ==========================================================
@@ -286,7 +397,6 @@ document.addEventListener("DOMContentLoaded", function () {
 (() => {
   console.log("Sistema NO LOGIN cargado sin interferir con el main viejo.");
 
-  
   const juegosNoLogin = {
     darksouls_p: {
       titulo: "Dark Souls: Remastered",

@@ -1,3 +1,16 @@
+
+<?php
+session_start();
+
+// Verificar si el usuario está logueado Y es admin
+if (!isset($_SESSION['user_id']) || $_SESSION['user_rol'] !== 'admin') {
+    header('Location: login.html');
+    exit();
+}
+
+$userName = $_SESSION['user_nombre'] ?? 'Admin';
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -25,7 +38,7 @@
       
 
       <div class="user-section">
-        <span class="user-link">Admin</span>
+        <span class="user-link">🛡️ <?php echo htmlspecialchars($userName); ?> (Admin)</span>
         <button id="logoutBtn" class="logout-btn">
           <img src="../assets/img/cerrar-sesion.png" alt="Cerrar sesión">
         </button>

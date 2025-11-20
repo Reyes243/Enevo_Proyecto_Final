@@ -11,115 +11,242 @@ class AuthController {
     private $userModel;
     
     public function __construct() {
-        $connection = new ConnectionController();
-        $this->conn = $connection->connect();
-        $this->userModel = new UserModel($this->conn);
+        try {
+            $connection = new ConnectionController();
+            $this->conn = $connection->connect();
+            
+            if (!$this->conn) {
+                throw new Exception("No se pudo conectar a la base de datos");
+            }
+            
+            $this->userModel = new UserModel($this->conn);
+        } catch (Exception $e) {
+            error_log("Error en constructor AuthController: " . $e->getMessage());
+            $this->redirect('login', 'connection');
+        }
+    }
+    
+    /**
+     * Método helper para redireccionar correctamente
+     */
+    private function redirect($page, $error = null) {
+        // Detectar la ruta base correctamente
+        $baseUrl = $this->getBaseUrl();
+        
+        // Mapear nombres y extensiones
+        $pageMap = [
+            'register' => 'registro.html',
+            'login' => 'login.html',
+            'principal' => 'principal.php'
+        ];
+        
+        $fileName = $pageMap[$page] ?? $page . '.html';
+        $url = "{$baseUrl}/views/{$fileName}";
+        
+        if ($error) {
+            $url .= "?error={$error}";
+        } elseif ($page === 'login' && isset($_GET['registered'])) {
+            $url .= "?registered=1";
+        }
+        
+        header("Location: {$url}");
+        exit();
+    }
+    
+    /**
+     * Obtiene la URL base del proyecto
+     */
+    private function getBaseUrl() {
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+        $host = $_SERVER['HTTP_HOST'];
+        
+        // SCRIPT_NAME = /Enevo_Proyecto_Final/assets/app/controllers/AuthController.php
+        // Necesitamos: /Enevo_Proyecto_Final
+        
+        $scriptPath = $_SERVER['SCRIPT_NAME'];
+        
+        // Encontrar la posición de /assets/
+        $assetsPos = strpos($scriptPath, '/assets/');
+        
+        if ($assetsPos !== false) {
+            // Tomar todo antes de /assets/
+            $projectPath = substr($scriptPath, 0, $assetsPos);
+        } else {
+            // Fallback
+            $projectPath = dirname(dirname(dirname(dirname($scriptPath))));
+        }
+        
+        return "{$protocol}://{$host}{$projectPath}";
     }
     
     public function login($email, $password) {
+    try {
         $email = trim($email);
         $password = trim($password);
 
+        // 1. Validar email
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            header('Location: ../../../views/login.html?error=invalid_email');
-            exit();
+            $this->redirect('login', 'invalid_email');
         }
 
+        // 2. Buscar usuario
         $user = $this->userModel->getUserByEmail($email);
 
         if (!$user) {
-            header('Location: ../../../views/login.html?error=login');
-            exit();
+            $this->redirect('login', 'login_failed'); // Usuario no existe
         }
 
+        // 3. Verificar contraseña
         if (password_verify($password, $user['password'])) {
+            
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
             }
             
             session_regenerate_id(true);
+            
+            // Guardar datos en Sesión PHP
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_nombre'] = $user['nombre'];
             $_SESSION['user_email'] = $user['email'];
+            $_SESSION['user_rol'] = $user['rol'] ?? 'cliente'; 
+
+            // 4. Lógica de Redirección por ROL (SOLUCIÓN A TU PROBLEMA)
+            if ($_SESSION['user_rol'] == 1 || $_SESSION['user_rol'] == 'admin') {
+                // Si es admin, mándalo a su dashboard
+                $baseUrl = $this->getBaseUrl();
+                header("Location: {$baseUrl}/views/admin_dashboard.php"); 
+            } else {
+                
+                $this->redirect('principal'); 
+            }
             
-            header('Location: ../../../views/principal.html');
             exit();
+
         } else {
-            header('Location: ../../../views/login.html?error=login');
-            exit();
+            // Contraseña incorrecta
+            $this->redirect('login', 'login_failed');
         }
+    } catch (Exception $e) {
+        error_log("Error en login: " . $e->getMessage());
+        $this->redirect('login', 'server');
     }
+}
     
     public function register($nombre, $email, $password, $confirm) {
-        $nombre = trim($nombre);
-        $email = trim($email);
-        $password = trim($password);
-        $confirm = trim($confirm);
+        try {
+            $nombre = trim($nombre);
+            $email = trim($email);
+            $password = trim($password);
+            $confirm = trim($confirm);
 
+            // Validar campos vacíos
+            if ($nombre === '' || $email === '' || $password === '' || $confirm === '') {
+                $this->redirect('register', 'empty');
+            }
 
-        // Campos vacíos
-        if ($nombre === '' || $email === '' || $password === '' || $confirm === '') {
-            header('Location: ../../../views/register.html?error=empty');
-            exit();
-        }
+            // Validar email
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $this->redirect('register', 'invalid_email');
+            }
 
-        // Email inválido
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            header('Location: ../../../views/register.html?error=invalid_email');
-            exit();
-        }
+            // Validar longitud contraseña
+            if (strlen($password) < 6) {
+                $this->redirect('register', 'weak_password');
+            }
 
-       
-        if (strlen($password) < 6) {
-            header('Location: ../../../views/register.html?error=weak_password');
-            exit();
-        }
+            // Validar coincidencia de contraseñas
+            if ($password !== $confirm) {
+                $this->redirect('register', 'password_mismatch');
+            }
 
-    
-        if ($password !== $confirm) {
-            header('Location: ../../../views/register.html?error=password_mismatch');
-            exit();
-        }
+            // Verificar si el email ya existe
+            $existing = $this->userModel->getUserByEmail($email);
+            if ($existing) {
+                $this->redirect('register', 'email_exists');
+            }
 
-        
-        $existing = $this->userModel->getUserByEmail($email);
-        if ($existing) {
-            header('Location: ../../../views/register.html?error=email_exists');
-            exit();
-        }
+            // Verificar si el username ya existe
+            if ($this->userModel->usernameExists($nombre)) {
+                $this->redirect('register', 'username_exists');
+            }
 
-        $created = $this->userModel->createUser($nombre, $email, $password);
+            // Intentar crear el usuario
+            $result = $this->userModel->createUser($nombre, $email, $password);
 
-        if ($created) {
-            header('Location: ../../../views/login.html?registered=1');
-            exit();
-        } else {
-            header('Location: ../../../views/register.html?error=register_failed');
-            exit();
+            if ($result['success']) {
+                // Redirigir a login con mensaje de éxito
+                $baseUrl = $this->getBaseUrl();
+                header("Location: {$baseUrl}/views/login.html?registered=1");
+                exit();
+            } else {
+                // Manejar diferentes tipos de error
+                switch ($result['error']) {
+                    case 'duplicate':
+                        $this->redirect('register', 'duplicate_data');
+                        break;
+                    case 'prepare_failed':
+                    case 'execution_failed':
+                        $this->redirect('register', 'database');
+                        break;
+                    default:
+                        $this->redirect('register', 'register_failed');
+                }
+            }
+        } catch (Exception $e) {
+            error_log("Error en register: " . $e->getMessage());
+            $this->redirect('register', 'server');
         }
     }
 }
 
-$action = $_POST['action'] ?? '';
-$auth = new AuthController();
+// Manejo de peticiones
+try {
+    $action = $_POST['action'] ?? '';
+    $auth = new AuthController();
 
-if ($action === 'register') {
-    $nombre   = $_POST['nombre'] ?? '';
-    $email    = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
-    $confirm  = $_POST['confirm_password'] ?? '';
+    if ($action === 'register') {
+        // IMPORTANTE: Cambiar 'name' por 'nombre' para que coincida con tu HTML
+        $nombre   = $_POST['nombre'] ?? $_POST['name'] ?? '';
+        $email    = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $confirm  = $_POST['confirm_password'] ?? '';
 
-   
-    $auth->register($nombre, $email, $password, $confirm);
+        $auth->register($nombre, $email, $password, $confirm);
 
-} elseif ($action === 'login') {
+    } elseif ($action === 'login') {
+        $email  = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $auth->login($email, $password);
 
-    $email  = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
-    $auth->login($email, $password);
-
-} else {
-    header('Location: ../../../views/login.html');
+    } else {
+        // Calcular ruta base manualmente para este caso
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+        $host = $_SERVER['HTTP_HOST'];
+        $parts = explode('/', $_SERVER['SCRIPT_NAME']);
+        array_pop($parts); // AuthController.php
+        array_pop($parts); // controllers
+        array_pop($parts); // app
+        array_pop($parts); // assets
+        $base = implode('/', $parts);
+        
+        header("Location: {$protocol}://{$host}{$base}/views/login.html?error=invalid_action");
+        exit();
+    }
+} catch (Exception $e) {
+    error_log("Error general en AuthController: " . $e->getMessage());
+    
+    // Calcular ruta base manualmente para este caso
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+    $host = $_SERVER['HTTP_HOST'];
+    $parts = explode('/', $_SERVER['SCRIPT_NAME']);
+    array_pop($parts); // AuthController.php
+    array_pop($parts); // controllers
+    array_pop($parts); // app
+    array_pop($parts); // assets
+    $base = implode('/', $parts);
+    
+    header("Location: {$protocol}://{$host}{$base}/views/login.html?error=fatal");
     exit();
 }
 ?>

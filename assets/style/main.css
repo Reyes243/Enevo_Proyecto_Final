@@ -11,6 +11,61 @@ body {
   color: #fff;
 }
 
+/* ========================================
+   ESTILOS PARA ALERTAS DE ERROR Y ÉXITO
+   ======================================== */
+.alert-error,
+.alert-success {
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: slideDown 0.3s ease;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.alert-error {
+  background-color: #fee;
+  border-left: 4px solid #f44;
+  color: #c33;
+}
+
+.alert-success {
+  background-color: #efe;
+  border-left: 4px solid #4c4;
+  color: #383;
+}
+
+.alert-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: inherit;
+  padding: 0 5px;
+  margin-left: 10px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.alert-close:hover {
+  opacity: 1;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 /* ====== NAVBAR ====== */
 .navbar {
   background-color: #1f2833;
@@ -495,14 +550,12 @@ button:hover {
   margin: 20px 0;
 }
 
-
 .niveles-container {
-  max-width: 900px;     
-  width: 55%;          
+  max-width: 900px;
+  width: 55%;
   margin: 20px auto;
   padding: 0 15px;
 }
-
 
 .niveles-title {
   text-align: center;
@@ -512,44 +565,41 @@ button:hover {
   box-shadow: none;
 }
 
-
 .niveles-descripcion {
   background: #1f2833;
   padding: 20px;
   line-height: 1.6;
   margin-bottom: 25px;
-  text-align: justify;   
+  text-align: justify;
 }
-
 
 .niveles-subtitle {
   text-align: center;
   background: #1f2833;
   padding: 15px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
-
 
 .nivel-card {
   background: #1f2833;
   padding: 20px;
   margin: 20px 0;
-  text-align: center;   
-  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 .nivel-card h3 {
   margin-bottom: 10px;
   color: #ffffff;
   font-size: 1.3rem;
-  text-align: center;   
+  text-align: center;
 }
 
 .nivel-card p {
   color: #cfcfcf;
   font-size: 0.95rem;
-  text-align: center;   
+  text-align: center;
 }
 
 /* ====== RESPONSIVE ====== */
