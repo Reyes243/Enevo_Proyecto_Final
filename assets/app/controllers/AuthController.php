@@ -21,7 +21,7 @@ class AuthController {
             
             $this->userModel = new UserModel($this->conn);
         } catch (Exception $e) {
-            error_log("Error en constructor AuthController: " . $e->getMessage());
+            //error_log("Error en constructor AuthController: " . $e->getMessage());
             $this->redirect('login', 'connection');
         }
     }
@@ -30,10 +30,8 @@ class AuthController {
      * Método helper para redireccionar correctamente
      */
     private function redirect($page, $error = null) {
-        // Detectar la ruta base correctamente
         $baseUrl = $this->getBaseUrl();
         
-        // Mapear nombres y extensiones
         $pageMap = [
             'register' => 'registro.html',
             'login' => 'login.html',
@@ -49,6 +47,7 @@ class AuthController {
             $url .= "?registered=1";
         }
         
+       // error_log("Redirigiendo a: {$url}");
         header("Location: {$url}");
         exit();
     }
@@ -59,20 +58,12 @@ class AuthController {
     private function getBaseUrl() {
         $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
         $host = $_SERVER['HTTP_HOST'];
-        
-        // SCRIPT_NAME = /Enevo_Proyecto_Final/assets/app/controllers/AuthController.php
-        // Necesitamos: /Enevo_Proyecto_Final
-        
         $scriptPath = $_SERVER['SCRIPT_NAME'];
-        
-        // Encontrar la posición de /assets/
         $assetsPos = strpos($scriptPath, '/assets/');
         
         if ($assetsPos !== false) {
-            // Tomar todo antes de /assets/
             $projectPath = substr($scriptPath, 0, $assetsPos);
         } else {
-            // Fallback
             $projectPath = dirname(dirname(dirname(dirname($scriptPath))));
         }
         
@@ -80,61 +71,86 @@ class AuthController {
     }
     
     public function login($email, $password) {
-    try {
-        $email = trim($email);
-        $password = trim($password);
-
-        // 1. Validar email
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $this->redirect('login', 'invalid_email');
-        }
-
-        // 2. Buscar usuario
-        $user = $this->userModel->getUserByEmail($email);
-
-        if (!$user) {
-            $this->redirect('login', 'login_failed'); // Usuario no existe
-        }
-
-        // 3. Verificar contraseña
-        if (password_verify($password, $user['password'])) {
+        try {
+           // error_log("=== INICIO LOGIN ===");
+           // error_log("Email recibido: " . $email);
             
-            if (session_status() === PHP_SESSION_NONE) {
-                session_start();
+            $email = trim($email);
+            $password = trim($password);
+
+            // Validar email
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+               // error_log("Email inválido: " . $email);
+                $this->redirect('login', 'invalid_email');
             }
-            
-            session_regenerate_id(true);
-            
-            // Guardar datos en Sesión PHP
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_nombre'] = $user['nombre'];
-            $_SESSION['user_email'] = $user['email'];
-            $_SESSION['user_rol'] = $user['rol'] ?? 'cliente'; 
 
-            // 4. Lógica de Redirección por ROL (SOLUCIÓN A TU PROBLEMA)
-            if ($_SESSION['user_rol'] == 1 || $_SESSION['user_rol'] == 'admin') {
-                // Si es admin, mándalo a su dashboard
-                $baseUrl = $this->getBaseUrl();
-                header("Location: {$baseUrl}/views/admin_dashboard.php"); 
-            } else {
+            error_log("Buscando usuario en BD...");
+            // Buscar usuario
+            $user = $this->userModel->getUserByEmail($email);
+
+            if (!$user) {
+               // error_log("Usuario no encontrado para: " . $email);
+                $this->redirect('login', 'login');
+            }
+
+           // error_log("Usuario encontrado - ID: " . $user['id'] . ", Nombre: " . $user['nombre']);
+            //error_log("Hash en BD: " . substr($user['password'], 0, 20) . "...");
+            
+            // Verificar contraseña
+            $passwordVerified = password_verify($password, $user['password']);
+           // error_log("Verificación de contraseña: " . ($passwordVerified ? "EXITOSA" : "FALLIDA"));
+            
+            if ($passwordVerified) {
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                }
                 
-                $this->redirect('principal'); 
+                session_regenerate_id(true);
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_nombre'] = $user['nombre'];
+                $_SESSION['user_email'] = $user['email'];
+                $_SESSION['user_rol'] = $user['rol'] ?? 'cliente';
+                
+               // error_log("Sesión iniciada correctamente");
+               // error_log("Rol asignado: " . $_SESSION['user_rol']);
+                
+                // Redirigir según el rol
+                $baseUrl = $this->getBaseUrl();
+                
+                if ($_SESSION['user_rol'] === 'admin') {
+                   // error_log("Redirigiendo a panel admin");
+                    echo "<script>
+                        localStorage.setItem('user_nombre', '" . addslashes($user['nombre']) . "');
+                        localStorage.setItem('user_rol', 'admin');
+                        localStorage.setItem('usuarioLogeado', 'true');
+                        window.location.href = '{$baseUrl}/views/principalAdmin.php';
+                    </script>";
+                } else {
+                   // error_log("Redirigiendo a principal");
+                    echo "<script>
+                        localStorage.setItem('user_nombre', '" . addslashes($user['nombre']) . "');
+                        localStorage.setItem('user_rol', 'cliente');
+                        localStorage.setItem('usuarioLogeado', 'true');
+                        window.location.href = '{$baseUrl}/views/principal.php';
+                    </script>";
+                }
+                exit();
+            } else {
+                //error_log("Contraseña incorrecta");
+                $this->redirect('login', 'login');
             }
-            
-            exit();
-
-        } else {
-            // Contraseña incorrecta
-            $this->redirect('login', 'login_failed');
+        } catch (Exception $e) {
+           // error_log("Error en login: " . $e->getMessage());
+           // error_log("Stack trace: " . $e->getTraceAsString());
+            $this->redirect('login', 'server');
         }
-    } catch (Exception $e) {
-        error_log("Error en login: " . $e->getMessage());
-        $this->redirect('login', 'server');
     }
-}
     
     public function register($nombre, $email, $password, $confirm) {
         try {
+           // error_log("=== INICIO REGISTRO ===");
+           // error_log("Nombre: {$nombre}, Email: {$email}");
+            
             $nombre = trim($nombre);
             $email = trim($email);
             $password = trim($password);
@@ -142,45 +158,52 @@ class AuthController {
 
             // Validar campos vacíos
             if ($nombre === '' || $email === '' || $password === '' || $confirm === '') {
+            //    error_log("Campos vacíos detectados");
                 $this->redirect('register', 'empty');
             }
 
             // Validar email
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+               // error_log("Email inválido: {$email}");
                 $this->redirect('register', 'invalid_email');
             }
 
             // Validar longitud contraseña
             if (strlen($password) < 6) {
+              //  error_log("Contraseña muy corta");
                 $this->redirect('register', 'weak_password');
             }
 
             // Validar coincidencia de contraseñas
             if ($password !== $confirm) {
+               // error_log("Contraseñas no coinciden");
                 $this->redirect('register', 'password_mismatch');
             }
 
             // Verificar si el email ya existe
             $existing = $this->userModel->getUserByEmail($email);
             if ($existing) {
+              //  error_log("Email ya existe: {$email}");
                 $this->redirect('register', 'email_exists');
             }
 
             // Verificar si el username ya existe
             if ($this->userModel->usernameExists($nombre)) {
+              //  error_log("Username ya existe: {$nombre}");
                 $this->redirect('register', 'username_exists');
             }
 
+            error_log("Intentando crear usuario...");
             // Intentar crear el usuario
             $result = $this->userModel->createUser($nombre, $email, $password);
 
             if ($result['success']) {
-                // Redirigir a login con mensaje de éxito
+              //  error_log("Usuario creado exitosamente");
                 $baseUrl = $this->getBaseUrl();
                 header("Location: {$baseUrl}/views/login.html?registered=1");
                 exit();
             } else {
-                // Manejar diferentes tipos de error
+              //  error_log("Error al crear usuario: " . $result['error']);
                 switch ($result['error']) {
                     case 'duplicate':
                         $this->redirect('register', 'duplicate_data');
@@ -194,7 +217,8 @@ class AuthController {
                 }
             }
         } catch (Exception $e) {
-            error_log("Error en register: " . $e->getMessage());
+          //  error_log("Error en register: " . $e->getMessage());
+           // error_log("Stack trace: " . $e->getTraceAsString());
             $this->redirect('register', 'server');
         }
     }
@@ -202,11 +226,13 @@ class AuthController {
 
 // Manejo de peticiones
 try {
+   
+    
     $action = $_POST['action'] ?? '';
+    
     $auth = new AuthController();
 
     if ($action === 'register') {
-        // IMPORTANTE: Cambiar 'name' por 'nombre' para que coincida con tu HTML
         $nombre   = $_POST['nombre'] ?? $_POST['name'] ?? '';
         $email    = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
@@ -220,30 +246,28 @@ try {
         $auth->login($email, $password);
 
     } else {
-        // Calcular ruta base manualmente para este caso
         $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
         $host = $_SERVER['HTTP_HOST'];
         $parts = explode('/', $_SERVER['SCRIPT_NAME']);
-        array_pop($parts); // AuthController.php
-        array_pop($parts); // controllers
-        array_pop($parts); // app
-        array_pop($parts); // assets
+        array_pop($parts);
+        array_pop($parts);
+        array_pop($parts);
+        array_pop($parts);
         $base = implode('/', $parts);
         
         header("Location: {$protocol}://{$host}{$base}/views/login.html?error=invalid_action");
         exit();
     }
 } catch (Exception $e) {
-    error_log("Error general en AuthController: " . $e->getMessage());
     
-    // Calcular ruta base manualmente para este caso
+    
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
     $host = $_SERVER['HTTP_HOST'];
     $parts = explode('/', $_SERVER['SCRIPT_NAME']);
-    array_pop($parts); // AuthController.php
-    array_pop($parts); // controllers
-    array_pop($parts); // app
-    array_pop($parts); // assets
+    array_pop($parts);
+    array_pop($parts);
+    array_pop($parts);
+    array_pop($parts);
     $base = implode('/', $parts);
     
     header("Location: {$protocol}://{$host}{$base}/views/login.html?error=fatal");
