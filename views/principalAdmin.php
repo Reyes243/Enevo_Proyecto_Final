@@ -38,7 +38,7 @@ $userName = $_SESSION['user_nombre'] ?? 'Admin';
       
 
       <div class="user-section">
-        <span class="user-link">🛡️ <?php echo htmlspecialchars($userName); ?> (Admin)</span>
+        <span class="user-link"> <?php echo htmlspecialchars($userName); ?> (Admin)</span>
         <button id="logoutBtn" class="logout-btn">
           <img src="../assets/img/cerrar-sesion.png" alt="Cerrar sesión">
         </button>
