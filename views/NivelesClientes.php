@@ -1,3 +1,20 @@
+<?php
+session_start();
+
+// Verificar si el usuario está logueado
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.html');
+    exit();
+}
+
+if ($_SESSION['user_rol'] === 'admin') {
+    header('Location: admin.php');
+    exit();
+}
+
+$userName = $_SESSION['user_nombre'] ?? 'Usuario';
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -24,7 +41,7 @@
             <a href="#">Carrito</a>
 
             <div class="user-section">
-                <span class="user-link">Usuario</span>
+                 <span class="user-link">👤 <?php echo htmlspecialchars($userName); ?></span>
                 <button id="logoutBtn" class="logout-btn">
                     <img src="../assets/img/cerrar-sesion.png" alt="Cerrar sesión">
                 </button>
