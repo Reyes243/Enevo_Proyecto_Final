@@ -32,13 +32,13 @@ $userName = $_SESSION['user_nombre'] ?? 'Admin';
 
     <div class="nav-links">
       <a href="#" class="active">Tienda</a>
-      <a href="NivelesAdmin.html">Niveles</a>
-      <a href="ClientesAdmin.html">Clientes</a>
-      <a href="Ventas.html">Ventas</a>
+      <a href="NivelesAdmin.php">Niveles</a>
+      <a href="ClientesAdmin.php">Clientes</a>
+      <a href="Ventas.php">Ventas</a>
       
 
       <div class="user-section">
-        <span class="user-link"> <?php echo htmlspecialchars($userName); ?> (Admin)</span>
+        <span class="user-link"> <?php echo htmlspecialchars($userName); ?> </span>
         <button id="logoutBtn" class="logout-btn">
           <img src="../assets/img/cerrar-sesion.png" alt="Cerrar sesión">
         </button>

@@ -276,118 +276,115 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ===========================================================
-  //          SISTEMA DE DETALLES DINÁMICOS (JUEGOS)
-  // ===========================================================
-  document.querySelectorAll(".btn-mas-detalles").forEach((btn) => {
-    btn.addEventListener("click", function () {
-      const juegoID = this.dataset.juego;
-      localStorage.setItem("juegoSeleccionado", juegoID);
+// ===========================================================
+//          SISTEMA DE DETALLES DINÁMICOS (JUEGOS)
+// ===========================================================
+document.querySelectorAll(".btn-mas-detalles").forEach((btn) => {
+  btn.addEventListener("click", function () {
+    const juegoID = this.dataset.juego;
+    localStorage.setItem("juegoSeleccionado", juegoID);
 
-      // Detección de origen
-      const vieneDePrincipal =
-        window.location.pathname.includes("principal") ||
-        window.location.pathname.includes("PrincipalUser");
-
-      localStorage.setItem(
-        "vieneDePrincipal",
-        vieneDePrincipal ? "true" : "false"
-      );
-
-      const basePath = window.location.pathname.includes("/views/")
-        ? "MasDetalles.html"
-        : "views/MasDetalles.html";
-
-      window.location.href = basePath;
-    });
-  });
-
-  // ===========================================================
-  //      CARGAR DATOS EN MasDetalles.html
-  // ===========================================================
-  if (window.location.pathname.includes("MasDetalles")) {
-    const usuarioLogeado = localStorage.getItem("usuarioLogeado") === "true";
+    // Detectar si viene de principal
     const vieneDePrincipal =
-      localStorage.getItem("vieneDePrincipal") === "true";
+      window.location.pathname.includes("principal") ||
+      window.location.pathname.includes("PrincipalUser");
 
-    if (!usuarioLogeado && !vieneDePrincipal) {
-      const barraUsuario = document.getElementById("barra-usuario");
-      if (barraUsuario) barraUsuario.style.display = "none";
-    }
+    localStorage.setItem(
+      "vieneDePrincipal",
+      vieneDePrincipal ? "true" : "false"
+    );
 
-    const juegos = {
-      darksouls: {
-        titulo: "Dark Souls: Remastered",
-        img: "../assets/img/DarksoulsRemastered.jpg",
-        precio: "Mex$ 549.00 o 45 Puntos",
-        descripcion: `
-                    Entonces, hubo fuego. Vuelve a experimentar el juego que definió un género,
-                    remasterizado en alta definición y funcionando a 60 FPS.
-                `,
-        requisitos: [
-          "SO: Windows 7 64-bit",
-          "CPU: Intel i5-2300 / AMD FX-6300",
-          "RAM: 8 GB",
-          "GPU: GTX 460 / Radeon HD 6870",
-          "DirectX 11",
-          "8 GB de espacio disponible",
-        ],
-      },
+    // 👉 Redirección correcta SIEMPRE a .php
+    window.location.href = "../views/MasDetalles.php";
+  });
+});
 
-      expedition33: {
-        titulo: "Clair Obscur: Expedition 33",
-        img: "../assets/img/Logo33.png",
-        precio: "Mex$ 710.00 o 65 Puntos",
-        descripcion: `
-                    Un RPG artístico con combate por turnos y un mundo misterioso por descubrir.
-                `,
-        requisitos: [
-          "SO: Windows 10 64-bit",
-          "CPU: Ryzen 5 / i5 9th Gen",
-          "RAM: 16 GB",
-          "GPU: GTX 1070 / RX 590",
-          "DirectX 12",
-          "30 GB disponibles",
-        ],
-      },
+// ===========================================================
+//      CARGAR DATOS EN MasDetalles.php
+// ===========================================================
+if (window.location.pathname.includes("MasDetalles.php")) {
+  const usuarioLogeado = localStorage.getItem("usuarioLogeado") === "true";
+  const vieneDePrincipal = localStorage.getItem("vieneDePrincipal") === "true";
 
-      risk2: {
-        titulo: "Risk of Rain 2",
-        img: "../assets/img/LogoRisk.png",
-        precio: "Mex$ 233.00 o 20 Puntos",
-        descripcion: `
-                    Un roguelike cooperativo en 3D donde cada partida es diferente.
-                `,
-        requisitos: [
-          "SO: Windows 7 64-bit",
-          "CPU: Intel Core i3-6100",
-          "RAM: 4 GB",
-          "GPU: GTX 580",
-          "DirectX 11",
-          "4 GB disponibles",
-        ],
-      },
-    };
-
-    const gameID = localStorage.getItem("juegoSeleccionado");
-    const game = juegos[gameID];
-
-    if (game) {
-      document.getElementById("game-title").innerText = game.titulo;
-      document.getElementById("game-img").src = game.img;
-      document.getElementById("game-price").innerText = game.precio;
-      document.getElementById("buy-title").innerText = "Comprar " + game.titulo;
-      document.getElementById("game-desc").innerHTML = game.descripcion;
-
-      const reqList = document.getElementById("req-list");
-      reqList.innerHTML = "";
-      game.requisitos.forEach((req) => {
-        let li = document.createElement("li");
-        li.textContent = req;
-        reqList.appendChild(li);
-      });
-    }
+  if (!usuarioLogeado && !vieneDePrincipal) {
+    const barraUsuario = document.getElementById("barra-usuario");
+    if (barraUsuario) barraUsuario.style.display = "none";
   }
+
+  const juegos = {
+    darksouls: {
+      titulo: "Dark Souls: Remastered",
+      img: "../assets/img/DarksoulsRemastered.jpg",
+      precio: "Mex$ 549.00 o 45 Puntos",
+      descripcion: `
+        Entonces, hubo fuego. Vuelve a experimentar el juego que definió un género,
+        remasterizado en alta definición y funcionando a 60 FPS.
+      `,
+      requisitos: [
+        "SO: Windows 7 64-bit",
+        "CPU: Intel i5-2300 / AMD FX-6300",
+        "RAM: 8 GB",
+        "GPU: GTX 460 / Radeon HD 6870",
+        "DirectX 11",
+        "8 GB de espacio disponible",
+      ],
+    },
+
+    expedition33: {
+      titulo: "Clair Obscur: Expedition 33",
+      img: "../assets/img/Logo33.png",
+      precio: "Mex$ 710.00 o 65 Puntos",
+      descripcion: `
+        Un RPG artístico con combate por turnos y un mundo misterioso por descubrir.
+      `,
+      requisitos: [
+        "SO: Windows 10 64-bit",
+        "CPU: Ryzen 5 / i5 9th Gen",
+        "RAM: 16 GB",
+        "GPU: GTX 1070 / RX 590",
+        "DirectX 12",
+        "30 GB disponibles",
+      ],
+    },
+
+    risk2: {
+      titulo: "Risk of Rain 2",
+      img: "../assets/img/LogoRisk.png",
+      precio: "Mex$ 233.00 o 20 Puntos",
+      descripcion: `
+        Un roguelike cooperativo en 3D donde cada partida es diferente.
+      `,
+      requisitos: [
+        "SO: Windows 7 64-bit",
+        "CPU: Intel Core i3-6100",
+        "RAM: 4 GB",
+        "GPU: GTX 580",
+        "DirectX 11",
+        "4 GB disponibles",
+      ],
+    },
+  };
+
+  const gameID = localStorage.getItem("juegoSeleccionado");
+  const game = juegos[gameID];
+
+  if (game) {
+    document.getElementById("game-title").innerText = game.titulo;
+    document.getElementById("game-img").src = game.img;
+    document.getElementById("game-price").innerText = game.precio;
+    document.getElementById("buy-title").innerText = "Comprar " + game.titulo;
+    document.getElementById("game-desc").innerHTML = game.descripcion;
+
+    const reqList = document.getElementById("req-list");
+    reqList.innerHTML = "";
+    game.requisitos.forEach((req) => {
+      const li = document.createElement("li");
+      li.textContent = req;
+      reqList.appendChild(li);
+    });
+  }
+}
+
 });
 
 // ==========================================================

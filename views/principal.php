@@ -36,8 +36,8 @@ $userName = $_SESSION['user_nombre'] ?? 'Usuario';
 
       <div class="nav-links">
         <a href="#" class="active">Tienda</a>
-        <a href="NivelesClientes.html">Niveles</a>
-        <a href="#">Carrito</a>
+        <a href="NivelesClientes.php">Niveles</a>
+        <a href="Carrito.php">Carrito</a>
 
         <div class="user-section">
           <span class="user-link"> <?php echo htmlspecialchars($userName); ?></span>

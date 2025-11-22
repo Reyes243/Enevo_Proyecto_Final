@@ -36,14 +36,14 @@ $userName = $_SESSION['user_nombre'] ?? 'Usuario';
         </div>
 
         <div class="nav-links">
-            <a href="principal.html">Tienda</a>
+            <a href="principal.php">Tienda</a>
             <a href="#" class="active">Niveles</a>
             <a href="#">Carrito</a>
 
             <div class="user-section">
-                 <span class="user-link"> <?php echo htmlspecialchars($userName); ?></span>
+                <span class="user-link"> <?php echo htmlspecialchars($userName); ?></span>
                 <button id="logoutBtn" class="logout-btn">
-                    <img src="../assets/img/cerrar-sesion.png" alt="Cerrar sesión">
+                    <img src="../assets/img/cerrar-sesion.png" alt="Cerrar sesión" />
                 </button>
             </div>
         </div>

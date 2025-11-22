@@ -1,3 +1,19 @@
+<?php
+session_start();
+
+// Verificar si el usuario está logueado
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.html');
+    exit();
+}
+
+if ($_SESSION['user_rol'] === 'admin') {
+    header('Location: admin.php');
+    exit();
+}
+
+$userName = $_SESSION['user_nombre'] ?? 'Usuario';
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -12,7 +28,7 @@
 
 <body>
 
- 
+
     <nav class="navbar">
         <div class="logo">
             <img src="../assets/img/LogoEnevo2.png" alt="Logo Enevo">
@@ -20,29 +36,29 @@
         </div>
 
         <div class="nav-links">
-            <a href="principal.html">Tienda</a>
-            <a href="NivelesClientes.html">Niveles</a>
-            <a href="Carrito.html">Carrito</a>
+            <a href="principal.php">Tienda</a>
+            <a href="NivelesClientes.php">Niveles</a>
+            <a href="Carrito.php">Carrito</a>
             <div class="user-section">
-                <span class="user-link">Usuario</span>
+                <span class="user-link"> <?php echo htmlspecialchars($userName); ?></span>
                 <button id="logoutBtn" class="logout-btn">
-                    <img src="../assets/img/cerrar-sesion.png" alt="Cerrar sesión">
+                    <img src="../assets/img/cerrar-sesion.png" alt="Cerrar sesión" />
                 </button>
             </div>
         </div>
     </nav>
 
-   
+
     <main class="novedades" style="max-width: 760px;">
         <div class="details-card">
 
-          
+
             <h1 id="game-title" class="details-title"></h1>
 
-           
+
             <img id="game-img" class="details-hero" src="" alt="Juego">
 
-            
+
             <div class="buy-row">
                 <div class="buy-text">
                     <strong id="buy-title"></strong><br>
@@ -55,13 +71,13 @@
                 </div>
             </div>
 
-           
+
             <div class="section">
                 <h4>ACERCA DE ESTE JUEGO</h4>
                 <p class="text-muted" id="game-desc"></p>
             </div>
 
-            
+
             <div class="section requirements">
                 <h4>REQUISITOS DEL SISTEMA</h4>
                 <ul id="req-list"></ul>
@@ -69,7 +85,7 @@
         </div>
     </main>
 
-   
+
     <footer class="site-footer" style="margin-top:20px;">
         <div class="footer-inner">
             <div class="footer-logo">
@@ -79,9 +95,9 @@
         </div>
     </footer>
 
-  
+
     <script src="../assets/js/main.js"></script>
 
 </body>
-</html>
 
+</html>
