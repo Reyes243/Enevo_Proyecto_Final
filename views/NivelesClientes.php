@@ -65,24 +65,10 @@ $userName = $_SESSION['user_nombre'] ?? 'Usuario';
 
         <h3 class="niveles-subtitle">Nuestros niveles son</h3>
 
-        <!-- NIVEL PLATA -->
-        <div class="nivel-card">
-            <h3>Plata</h3>
-            <p>Nivel inicial. Ganas 10 puntos por compra.</p>
+        <div id="nivelesClientesContainer">
+
         </div>
 
-        <!-- NIVEL ORO -->
-        <div class="nivel-card">
-            <h3>Oro</h3>
-            <p>Se desbloquea tras 5 compras. Aquí recibes 15 puntos por compra y pronto disfrutarás de un 10% de
-                descuento.</p>
-        </div>
-
-        <!-- NIVEL PLATINO -->
-        <div class="nivel-card">
-            <h3>Platino</h3>
-            <p>Lo alcanzas con 10 compras. Obtienes 20 puntos por compra y próximamente tendrás un 15% de descuento</p>
-        </div>
 
     </main>
 
@@ -96,6 +82,8 @@ $userName = $_SESSION['user_nombre'] ?? 'Usuario';
         </div>
     </footer>
     <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/nivelesClientes.js"></script>
+
 </body>
 
 </html>

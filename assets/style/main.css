@@ -601,7 +601,368 @@ button:hover {
   font-size: 0.95rem;
   text-align: center;
 }
+/* ====== NIVELES ADMIN - PÁGINA PRINCIPAL ====== */
 
+.niveles-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.niveles-subtitle {
+  text-align: center;
+  background: #1f2833;
+  padding: 15px;
+  margin: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  flex: 1;
+}
+
+.btn-agregar {
+  background-color: #1F2833;
+  color: #ffffff;
+  border: none;
+  padding: 10px 30px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-size: 1rem;
+  position: absolute;
+  right: 0;
+}
+
+.btn-agregar:hover {
+  background-color: #e0b800;
+}
+
+/* Tarjetas de niveles con botones */
+.nivel-card-admin {
+  background: #1f2833;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.nivel-card-header {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.nivel-card-header h3 {
+  margin: 0 0 10px 0;
+  color: #ffffff;
+  font-size: 1.3rem;
+}
+
+.nivel-card-info {
+  text-align: center;
+  color: #cfcfcf;
+  font-size: 0.95rem;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.nivel-card-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.btn-nivel {
+  padding: 8px 25px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+}
+
+.btn-editar {
+  background-color: #ffd700;
+  color: #000;
+}
+
+.btn-editar:hover {
+  background-color: #e0b800;
+  transform: translateY(-2px);
+}
+
+.btn-clientes {
+  background-color: #ffd700;
+  color: #000;
+}
+
+.btn-clientes:hover {
+  background-color: #e0b800;
+  transform: translateY(-2px);
+}
+
+.btn-eliminar {
+  background-color: #ffd700;
+  color: #000;
+}
+
+.btn-eliminar:hover {
+  background-color: #e0b800;
+  transform: translateY(-2px);
+}
+
+/* ====== PÁGINAS DE FORMULARIO (Agregar/Editar) ====== */
+.form-page-container {
+  max-width: 600px;
+  width: 55%;
+  margin: 20px auto;
+  padding: 0 15px;
+  min-height: calc(100vh - 200px);
+}
+
+.form-page-title {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 15px;
+  background: none;
+  color: #fff;
+  font-size: 1.3rem;
+  line-height: 1.4;
+}
+
+.form-page-content {
+  background: #2d3548;
+  padding: 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.form-nivel-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-nivel-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-nivel-group label {
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.form-nivel-group input,
+.form-nivel-group textarea {
+  background-color: #1f2833;
+  border: 1px solid #555;
+  color: #fff;
+  padding: 12px;
+  font-size: 0.95rem;
+  font-family: "Poppins", sans-serif;
+  outline: none;
+  transition: border 0.3s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-nivel-group input:focus,
+.form-nivel-group textarea:focus {
+  border-color: #ffd700;
+}
+
+.form-nivel-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-page-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.btn-cancelar-page {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 12px 35px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1rem;
+}
+
+.btn-cancelar-page:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+}
+
+.btn-guardar-page {
+  background-color: #00ff00;
+  color: #000;
+  border: none;
+  padding: 12px 35px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1rem;
+}
+
+.btn-guardar-page:hover {
+  background-color: #00cc00;
+  transform: translateY(-2px);
+}
+
+/* ====== PÁGINA DE CLIENTES ====== */
+.clientes-page-container {
+  max-width: 800px;
+  width: 70%;
+  margin: 20px auto;
+  padding: 0 15px;
+  min-height: calc(100vh - 200px);
+}
+
+.clientes-page-title {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 15px;
+  background: none;
+  color: #fff;
+  font-size: 1.3rem;
+}
+
+.clientes-page-content {
+  background: #2d3548;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.tabla-clientes-wrapper {
+  background-color: #1f2833;
+  padding: 20px;
+  margin-bottom: 20px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.tabla-clientes-page {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-clientes-page thead {
+  background-color: #1f2833;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tabla-clientes-page th {
+  color: #fff;
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid #3c4454;
+  font-size: 1rem;
+}
+
+.tabla-clientes-page td {
+  color: #cfcfcf;
+  padding: 15px;
+  border-bottom: 1px solid #3c4454;
+  font-size: 0.95rem;
+}
+
+.tabla-clientes-page tbody tr {
+  transition: background-color 0.2s;
+}
+
+.tabla-clientes-page tbody tr:hover {
+  background-color: #363d57;
+}
+
+.clientes-page-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-volver-page {
+  background-color: #ffd700;
+  color: #000;
+  border: none;
+  padding: 12px 40px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1rem;
+}
+
+.btn-volver-page:hover {
+  background-color: #e0b800;
+  transform: translateY(-2px);
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+  .nivel-card-buttons {
+    flex-direction: column;
+  }
+
+  .btn-nivel {
+    width: 100%;
+  }
+
+  .niveles-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .btn-agregar {
+    width: 100%;
+  }
+
+  .form-page-container,
+  .clientes-page-container {
+    width: 90%;
+  }
+
+  .form-page-content,
+  .clientes-page-content {
+    padding: 20px;
+  }
+
+  .form-page-buttons {
+    flex-direction: column;
+  }
+
+  .btn-cancelar-page,
+  .btn-guardar-page,
+  .btn-volver-page {
+    width: 100%;
+  }
+
+  .tabla-clientes-page th,
+  .tabla-clientes-page td {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+
+  .form-page-title,
+  .clientes-page-title {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tabla-clientes-page th,
+  .tabla-clientes-page td {
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+}
 /* ====== RESPONSIVE ====== */
 @media (max-width: 600px) {
   .buy-row {
