@@ -1,15 +1,19 @@
 
-<?php
-session_start();
+ <?php
+    session_start();
 
-// Verificar si el usuario está logueado Y es admin
-if (!isset($_SESSION['user_id']) || $_SESSION['user_rol'] !== 'admin') {
-    header('Location: login.html');
-    exit();
-}
+    // Verificar si el usuario está logueado Y es admin
+    if (!isset($_SESSION['user_id']) || $_SESSION['user_rol'] !== 'admin') {
+        header('Location: login.html');
+        exit();
+    }
 
-$userName = $_SESSION['user_nombre'] ?? 'Admin';
+    $nombreNivel = $_GET['nombre'] ?? 'Nivel';
+    $idNivel = $_GET['id'] ?? 0;
+
+    $userName = $_SESSION['user_nombre'] ?? 'Admin';
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -88,7 +92,7 @@ $userName = $_SESSION['user_nombre'] ?? 'Admin';
     </footer>
 
     <script src="../assets/js/main.js"></script>
-    <script src="../assets/js/niveles.js"></script>
+    <script src="../assets/js/nivelesClientes.js"></script>
 </body>
 
 </html>

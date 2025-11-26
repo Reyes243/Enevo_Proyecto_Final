@@ -82,7 +82,7 @@ $userName = $_SESSION['user_nombre'] ?? 'Usuario';
         </div>
     </footer>
     <script src="../assets/js/main.js"></script>
-    <script src="../assets/js/nivelesClientes.js"></script>
+    <script src="../assets/js/nivelesClientesPublic.js"></script>
 
 </body>
 
