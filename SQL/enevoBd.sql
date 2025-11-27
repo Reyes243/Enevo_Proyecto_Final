@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3308
--- Tiempo de generación: 21-11-2025 a las 20:11:11
+-- Tiempo de generación: 26-11-2025 a las 20:12:41
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -61,8 +61,16 @@ CREATE TABLE `niveles` (
   `id` int(11) NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `puntos_minimos` int(11) NOT NULL,
+  `compras_necesarias` int(11) NOT NULL DEFAULT 0,
   `beneficios` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `niveles`
+--
+
+INSERT INTO `niveles` (`id`, `nombre`, `puntos_minimos`, `compras_necesarias`, `beneficios`) VALUES
+(1, 'Bronce', 100, 1, 'El mejor nivel para iniciar en la plataforma');
 
 -- --------------------------------------------------------
 
@@ -121,7 +129,9 @@ INSERT INTO `usuarios` (`id`, `username`, `password_hash`, `email`, `rol`, `fech
 (11, 'Diego1', '$2y$10$rx6KRFvsx3kk2KQBi6PGC.RB8UF7JGztzdf8HS.mHwd4W9qFqfFyS', 'demo@ejemplo.coml', 'admin', '2025-11-20 22:03:02'),
 (12, 'qqwqw', '$2y$10$YdmfClCs4gi11LuIcS0FhOraP5oAjAGGBl4XO5ePBm/4X1tVx74Ku', 'addad@ddfd.com', 'cliente', '2025-11-20 22:17:35'),
 (13, 'Admin123', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin@gmail.com', 'admin', '2025-11-20 22:49:42'),
-(14, 'Wesley', '$2y$10$qyNUTFc7wpxnsDvLaVAdlOq.g.ZoALC0Cu/FxYE27N59QhG41S9S2', 'we@gmail.com', 'cliente', '2025-11-20 23:55:34');
+(14, 'Wesley', '$2y$10$qyNUTFc7wpxnsDvLaVAdlOq.g.ZoALC0Cu/FxYE27N59QhG41S9S2', 'we@gmail.com', 'cliente', '2025-11-20 23:55:34'),
+(15, 'DiegoEmiliano', '$2y$10$vgDfWzZOAXrA3i6osxlZj.Nl9VHpGy7qLWFFyIUEUcX6bNuxDKxRW', 'demi@gmail.com', 'admin', '2025-11-25 19:21:55'),
+(16, 'Wenseslao', '$2y$10$epgwZ0cpWbrSjP0kQbeGzeO3.RInQH9C.kZJRnxhk5Pu6gCVhY.dK', 'sistemas@gmail.com', 'cliente', '2025-11-26 18:18:25');
 
 --
 -- Índices para tablas volcadas
@@ -191,7 +201,7 @@ ALTER TABLE `compras`
 -- AUTO_INCREMENT de la tabla `niveles`
 --
 ALTER TABLE `niveles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `recompensas`
@@ -209,7 +219,7 @@ ALTER TABLE `recompensas_canjeadas`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Restricciones para tablas volcadas
