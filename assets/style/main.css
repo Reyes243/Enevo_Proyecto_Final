@@ -139,9 +139,11 @@ main {
   transition: color 0.3s ease;
 }
 
+
 .user-link:hover {
   color: #ffd700;
 }
+
 
 .logout-btn {
   background: none;
@@ -1371,3 +1373,317 @@ tbody tr td {
   cursor: pointer;
   margin-top: 10px;
 }
+/* ======== PERFIL ======== */
+
+.perfil-container {
+    width: 100%;
+    padding: 40px 0;
+    background: #363D57;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.perfil-title {
+    color: white;
+    font-size: 26px;
+    margin-bottom: 25px;
+}
+
+.perfil-card {
+    width: 55%;
+    background: #1F2833;
+    padding: 40px 60px;
+    color: #e5e5e5;
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.perfil-left {
+    width: 50%;
+    font-size: 15px;
+}
+
+.perfil-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    background: #ccc;
+}
+
+.perfil-right {
+    width: 40%;
+    text-align: center;
+}
+
+.perfil-right h3 {
+    color: white;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.puntos-num {
+    font-size: 32px;
+    color: white;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 30px;
+}
+
+.perfil-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn-perfil {
+    background: #f1c40f;
+    padding: 10px 18px;
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+}
+/* ======== RESPONSIVO ======== */
+
+
+@media (max-width: 992px) {
+    .perfil-card {
+        width: 85%;
+        padding: 30px 40px;
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+    }
+
+    .perfil-left, 
+    .perfil-right {
+        width: 100%;
+    }
+
+    .perfil-left {
+        text-align: center;
+    }
+
+    .perfil-avatar {
+        margin: 0 auto 20px auto;
+    }
+
+    .perfil-buttons {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-perfil {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 600px) {
+    .perfil-card {
+        width: 92%;
+        padding: 25px 20px;
+    }
+
+    .perfil-title {
+        font-size: 22px;
+    }
+
+    .perfil-right h3 {
+        font-size: 18px;
+    }
+
+    .puntos-num {
+        font-size: 28px;
+    }
+
+    .btn-perfil {
+        padding: 12px;
+        font-size: 14px;
+    }
+}
+/* ======== HISTORIAL DE COMPRAS ======== */
+
+.historial-container {
+    width: 100%;
+    padding: 40px 0;
+    background: #363D57;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.historial-title {
+    color: white;
+    font-size: 26px;
+    margin-bottom: 25px;
+}
+
+.historial-card {
+    width: 55%;
+    background: #1F2833;
+    padding: 30px 40px;
+}
+
+.historial-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #fff;
+}
+
+.historial-table th {
+    text-align: left;
+    padding: 12px;
+    font-weight: 600;
+}
+
+.historial-table td {
+    padding: 12px;
+    border-bottom: 1px solid #3a4456;
+}
+
+.historial-btn-box {
+    display: flex;
+    justify-content: end;
+    margin-top: 25px;
+}
+
+.historial-btn {
+    background: #f1c40f;
+    padding: 10px 25px;
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+}
+
+/* ======== RESPONSIVO ======== */
+
+@media (max-width: 900px) {
+    .historial-card {
+        width: 85%;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .historial-title {
+        font-size: 22px;
+    }
+
+    .historial-card {
+        width: 92%;
+        padding: 15px;
+    }
+
+    .historial-table th,
+    .historial-table td {
+        padding: 10px 6px;
+        font-size: 13px;
+    }
+
+    .historial-btn {
+        width: 100%;
+        text-align: center;
+        display: block;
+        padding: 12px;
+    }
+
+    .historial-btn-box {
+        justify-content: center;
+    }
+}
+/* ============================
+         CARRITO DE COMPRAS
+   ============================ */
+
+.carrito-container {
+    width: 100%;
+    padding: 40px 0 60px;
+    background: #363D57; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.carrito-title {
+    color: #ffffff;
+    font-size: 26px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 22px;
+}
+
+/* CARD PRINCIPAL */
+.carrito-card {
+    width: 55%;
+    background: #1F2833;
+    padding: 45px 40px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 260px;
+}
+
+
+.carrito-empty {
+    color: #d4dbe2;
+    font-size: 16px;
+    margin-bottom: 40px;
+}
+
+
+.carrito-total {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+    gap: 35px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* ============================
+          RESPONSIVO
+   ============================ */
+
+@media (max-width: 992px) {
+
+    .carrito-card {
+        width: 86%;
+        padding: 35px 30px;
+    }
+
+    .carrito-title {
+        font-size: 22px;
+    }
+
+    .carrito-total {
+        font-size: 14px;
+        gap: 25px;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .carrito-card {
+        width: 92%;
+        padding: 30px 20px;
+        min-height: 220px;
+    }
+
+    .carrito-empty {
+        font-size: 14px;
+    }
+
+    .carrito-total {
+        font-size: 13px;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 45px;
+    }
+}
+
+

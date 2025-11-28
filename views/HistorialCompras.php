@@ -42,10 +42,10 @@ $userName = $_SESSION['user_nombre'] ?? 'Usuario';
         <div class="nav-links">
             <a href="principal.php">Tienda</a>
             <a href="NivelesClientes.php">Niveles</a>
-            <a href="#" class="active">Carrito</a>
+            <a href="Carrito.php">Carrito</a>
 
             <div class="user-section">
-                <a href="Perfil.php" class="user-link "><?php echo htmlspecialchars($userName); ?></a>
+                <a href="Perfil.php" class="user-link active"><?php echo htmlspecialchars($userName); ?></a>
                 <button id="logoutBtn" class="logout-btn">
                     <img src="../assets/img/cerrar-sesion.png" alt="Cerrar sesión" />
                 </button>
@@ -54,21 +54,49 @@ $userName = $_SESSION['user_nombre'] ?? 'Usuario';
     </nav>
 
     <main>
-        <section class="carrito-container">
+        <section class="historial-container">
 
-            <h2 class="carrito-title">Bienvenido a tu carrito de compras</h2>
+            <h2 class="historial-title">Historial de compras</h2>
 
-            <div class="carrito-card">
-                <p class="carrito-empty">Tu carrito de compras está vacío</p>
+            <div class="historial-card">
 
-                <div class="carrito-total">
-                    <span>Total estimado</span>
-                    <span>Mex$ 0.00</span>
+                <table class="historial-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Total</th>
+                            <th>Puntos Generados</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>DARK SOULS: REMASTERED</td>
+                            <td>Compra</td>
+                            <td>Mex$ 549.00</td>
+                            <td>10</td>
+                        </tr>
+
+                        <tr>
+                            <td>2</td>
+                            <td>Risk of Rain 2</td>
+                            <td>Canje</td>
+                            <td>Puntos 45</td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="historial-btn-box">
+                    <a href="#" class="historial-btn">Descargar</a>
                 </div>
+
             </div>
 
         </section>
-
 
 
     </main>

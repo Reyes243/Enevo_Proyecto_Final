@@ -21,7 +21,7 @@ $userName = $_SESSION['user_nombre'] ?? 'Usuario';
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Historial de compras</title>
+    <title>Perfil</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/style/main.css">
 
@@ -42,10 +42,10 @@ $userName = $_SESSION['user_nombre'] ?? 'Usuario';
         <div class="nav-links">
             <a href="principal.php">Tienda</a>
             <a href="NivelesClientes.php">Niveles</a>
-            <a href="#" class="active">Carrito</a>
+            <a href="Carrito.php">Carrito</a>
 
             <div class="user-section">
-                <a href="Perfil.php" class="user-link "><?php echo htmlspecialchars($userName); ?></a>
+                <a class="user-link active"><?php echo htmlspecialchars($userName); ?></a>
                 <button id="logoutBtn" class="logout-btn">
                     <img src="../assets/img/cerrar-sesion.png" alt="Cerrar sesión" />
                 </button>
@@ -54,23 +54,33 @@ $userName = $_SESSION['user_nombre'] ?? 'Usuario';
     </nav>
 
     <main>
-        <section class="carrito-container">
+        <!-- CONTENIDO DEL PERFIL -->
+        <section class="perfil-container">
+            <h2 class="perfil-title">Perfil</h2>
 
-            <h2 class="carrito-title">Bienvenido a tu carrito de compras</h2>
+            <div class="perfil-card">
+                <div class="perfil-left">
+                    <img src="../assets/img/usuario.png" alt="Foto usuario" class="perfil-avatar">
 
-            <div class="carrito-card">
-                <p class="carrito-empty">Tu carrito de compras está vacío</p>
+                    <p><strong>Nombre:</strong> Carlos Hernandez</p>
+                    <p><strong>Correo:</strong> CarlosH@gmail.com</p>
+                    <br>
+                    <p><strong>Nivel:</strong> Plata</p>
+                    <p><strong>Siguiente nivel:</strong> Oro</p>
+                    <p><strong>Compras faltantes para siguiente nivel:</strong> 1</p>
+                </div>
 
-                <div class="carrito-total">
-                    <span>Total estimado</span>
-                    <span>Mex$ 0.00</span>
+                <div class="perfil-right">
+                    <h3>Puntos Totales</h3>
+                    <span class="puntos-num">30</span>
+
+                    <div class="perfil-buttons">
+                        <a href="HistorialCompras.php" class="btn-perfil">Ver Historial de compras</a>
+                        <a href="#" class="btn-perfil">Descargar</a>
+                    </div>
                 </div>
             </div>
-
         </section>
-
-
-
     </main>
 
 

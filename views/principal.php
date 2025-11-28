@@ -39,8 +39,9 @@ $userName = $_SESSION['user_nombre'] ?? 'Usuario';
       <a href="NivelesClientes.php">Niveles</a>
       <a href="Carrito.php">Carrito</a>
 
+
       <div class="user-section">
-        <span class="user-link"> <?php echo htmlspecialchars($userName); ?></span>
+        <a href="Perfil.php" class="user-link"><?php echo htmlspecialchars($userName); ?></a>
         <button id="logoutBtn" class="logout-btn">
           <img src="../assets/img/cerrar-sesion.png" alt="Cerrar sesión" />
         </button>
