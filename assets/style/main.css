@@ -1685,5 +1685,49 @@ tbody tr td {
         margin-top: 45px;
     }
 }
+@media (max-width: 900px) {
+    .form-page-content {
+        width: 100%;
+    }
 
+    .form-nivel-page {
+        width: 90%;
+        margin: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .form-nivel-page {
+        width: 100%;
+        padding: 1.2rem;
+    }
+
+    .form-nivel-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+    }
+
+    .form-nivel-group label {
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+    }
+
+    .form-nivel-group input,
+    .form-nivel-group textarea {
+        font-size: 0.9rem;
+        padding: 0.6rem;
+    }
+
+    .form-page-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .btn-cancelar-page,
+    .btn-guardar-page {
+        width: 100%;
+    }
+}
 

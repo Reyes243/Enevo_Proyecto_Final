@@ -368,8 +368,34 @@
 const API = "../assets/app/controllers/NivelController.php";
 
 /* ============================================================
+   VALIDAR inputs NUMÉRICOS — No permitir negativos ni 0
+============================================================ */
+function validarNumeroInput(input) {
+  input.addEventListener("input", function () {
+    let val = parseInt(this.value);
+
+    if (isNaN(val)) {
+      this.value = "";
+      return;
+    }
+
+    if (val < 1) {
+      this.value = 1;
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const puntos = document.getElementById("puntos");
+  const compras = document.getElementById("compras");
+
+  if (puntos) validarNumeroInput(puntos);
+  if (compras) validarNumeroInput(compras);
+});
+
+/* ============================================================
    1. LISTAR NIVELES (ADMIN) - action: getAll
-   ============================================================ */
+============================================================ */
 async function cargarNivelesAdmin() {
   const container = document.getElementById("nivelesContainer");
   if (!container) return;
@@ -387,9 +413,9 @@ async function cargarNivelesAdmin() {
 
   if (!niveles.length) {
     container.innerHTML = `
-            <div style="text-align:center; padding:40px; color:#cfcfcf;">
-                <p>No hay niveles registrados.</p>
-            </div>`;
+      <div style="text-align:center; padding:40px; color:#cfcfcf;">
+          <p>No hay niveles registrados.</p>
+      </div>`;
     return;
   }
 
@@ -399,24 +425,24 @@ async function cargarNivelesAdmin() {
     card.dataset.nivelId = nivel.id;
 
     card.innerHTML = `
-            <div class="nivel-card-header">
-                <h3>${nivel.nombre}</h3>
-            </div>
+      <div class="nivel-card-header">
+          <h3>${nivel.nombre}</h3>
+      </div>
 
-            <div class="nivel-card-info">
-                <p>${nivel.beneficios}</p>
-                <p style="margin-top:8px;color:#d6d6d6;font-size:0.9rem;">
-                    <strong>Puntos mínimos:</strong> ${nivel.puntos_minimos} · 
-                    <strong>Compras necesarias:</strong> ${nivel.compras_necesarias}
-                </p>
-            </div>
+      <div class="nivel-card-info">
+          <p>${nivel.beneficios}</p>
+          <p style="margin-top:8px;color:#d6d6d6;font-size:0.9rem;">
+              <strong>Puntos mínimos:</strong> ${nivel.puntos_minimos} · 
+              <strong>Compras necesarias:</strong> ${nivel.compras_necesarias}
+          </p>
+      </div>
 
-            <div class="nivel-card-buttons">
-                <button class="btn-nivel btn-editar" onclick="editarNivel(${nivel.id})">Editar</button>
-                <button class="btn-nivel btn-eliminar" onclick="eliminarNivel(${nivel.id}, '${nivel.nombre}')">Eliminar</button>
-                <button class="btn-clientes" onclick="verClientes(${nivel.id}, '${nivel.nombre}')"> Ver clientes </button>
-                </div>
-        `;
+      <div class="nivel-card-buttons">
+          <button class="btn-nivel btn-editar" onclick="editarNivel(${nivel.id})">Editar</button>
+          <button class="btn-nivel btn-eliminar" onclick="eliminarNivel(${nivel.id}, '${nivel.nombre}')">Eliminar</button>
+          <button class="btn-clientes" onclick="verClientes(${nivel.id}, '${nivel.nombre}')"> Ver clientes </button>
+      </div>
+    `;
 
     container.appendChild(card);
   });
@@ -424,18 +450,26 @@ async function cargarNivelesAdmin() {
 
 /* ============================================================
    2. AGREGAR NIVEL - action: create
-   ============================================================ */
+============================================================ */
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("formAgregarNivel");
   if (form) {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
+      const p = parseInt(document.getElementById("puntos").value);
+      const c = parseInt(document.getElementById("compras").value);
+
+      if (p < 1 || c < 1) {
+        alert("Los valores de puntos y compras deben ser mayores a 0.");
+        return;
+      }
+
       const datos = new FormData();
       datos.append("action", "create");
       datos.append("nombre", document.getElementById("nombre").value);
-      datos.append("puntos", document.getElementById("puntos").value);
-      datos.append("compras", document.getElementById("compras").value);
+      datos.append("puntos", p);
+      datos.append("compras", c);
       datos.append("descripcion", document.getElementById("descripcion").value);
 
       const res = await fetch(API, { method: "POST", body: datos });
@@ -453,7 +487,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /* ============================================================
    3. CARGAR DATOS EN EDITAR NIVEL - action: getById
-   ============================================================ */
+============================================================ */
 async function initEditarNivelPage() {
   const form = document.getElementById("formEditarNivel");
   if (!form) return;
@@ -478,12 +512,20 @@ async function initEditarNivelPage() {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    const p = parseInt(document.getElementById("puntos").value);
+    const c = parseInt(document.getElementById("compras").value);
+
+    if (p < 1 || c < 1) {
+      alert("Los valores de puntos y compras deben ser mayores a 0.");
+      return;
+    }
+
     const datos = new FormData();
     datos.append("action", "update");
     datos.append("nivelId", id);
     datos.append("nombre", document.getElementById("nombre").value);
-    datos.append("puntos", document.getElementById("puntos").value);
-    datos.append("compras", document.getElementById("compras").value);
+    datos.append("puntos", p);
+    datos.append("compras", c);
     datos.append("descripcion", document.getElementById("descripcion").value);
 
     const res = await fetch(API, { method: "POST", body: datos });
@@ -500,7 +542,7 @@ async function initEditarNivelPage() {
 
 /* ============================================================
    4. ELIMINAR NIVEL - action: delete
-   ============================================================ */
+============================================================ */
 async function eliminarNivel(id, nombre) {
   if (!confirm(`¿Seguro que deseas eliminar "${nombre}"?`)) return;
 
@@ -525,7 +567,7 @@ async function eliminarNivel(id, nombre) {
 
 /* ============================================================
    5. NIVELES CLIENTES (vista pública) - usa getAll
-   ============================================================ */
+============================================================ */
 async function cargarNivelesClientes() {
   const cont = document.getElementById("nivelesClientesContainer");
   if (!cont) return;
@@ -543,13 +585,13 @@ async function cargarNivelesClientes() {
     card.className = "nivel-card";
 
     card.innerHTML = `
-            <h3>${nivel.nombre}</h3>
-            <p>${nivel.beneficios}</p>
-            <p style="margin-top:8px;color:#d6d6d6;font-size:0.9rem;">
-                <strong>Puntos mínimos:</strong> ${nivel.puntos_minimos} · 
-                <strong>Compras necesarias:</strong> ${nivel.compras_necesarias}
-            </p>
-        `;
+      <h3>${nivel.nombre}</h3>
+      <p>${nivel.beneficios}</p>
+      <p style="margin-top:8px;color:#d6d6d6;font-size:0.9rem;">
+          <strong>Puntos mínimos:</strong> ${nivel.puntos_minimos} · 
+          <strong>Compras necesarias:</strong> ${nivel.compras_necesarias}
+      </p>
+    `;
 
     cont.appendChild(card);
   });
@@ -557,7 +599,7 @@ async function cargarNivelesClientes() {
 
 /* ============================================================
    6. AUTO-EJECUCIÓN POR PÁGINA
-   ============================================================ */
+============================================================ */
 document.addEventListener("DOMContentLoaded", () => {
   const path = window.location.pathname;
 
@@ -568,13 +610,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /* ============================================================
    Helpers globales
-   ============================================================ */
+============================================================ */
 function editarNivel(id) {
   window.location.href = `EditarNivel.php?id=${id}`;
 }
 
 function verClientes(id, nombre) {
-  window.location.href = `ClientesNivel.php?id=${id}&nombre=${encodeURIComponent(
-    nombre
-  )}`;
+  window.location.href = `ClientesNivel.php?id=${id}&nombre=${encodeURIComponent(nombre)}`;
 }
+

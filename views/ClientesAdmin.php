@@ -58,7 +58,7 @@ $userName = $_SESSION['user_nombre'] ?? 'Admin';
         <div class="clientes-header">
             <h2 class="clientes-title">Bienvenido al apartado de Clientes</h2>
 
-            <button class="btn-agregar-top" onclick="window.location.href='AgregarCliente.php'">
+            <button class="btn-agregar-top">
                 Agregar
             </button>
         </div>
