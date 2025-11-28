@@ -1,11 +1,10 @@
-
 <?php
 session_start();
 
 // Verificar si el usuario está logueado Y es admin
 if (!isset($_SESSION['user_id']) || $_SESSION['user_rol'] !== 'admin') {
-    header('Location: login.html');
-    exit();
+  header('Location: login.html');
+  exit();
 }
 
 $userName = $_SESSION['user_nombre'] ?? 'Admin';
@@ -38,7 +37,7 @@ $userName = $_SESSION['user_nombre'] ?? 'Admin';
       <a href="NivelesAdmin.php">Niveles</a>
       <a href="ClientesAdmin.php">Clientes</a>
       <a href="Ventas.php">Ventas</a>
-      
+
 
       <div class="user-section">
         <span class="user-link"> <?php echo htmlspecialchars($userName); ?> </span>
@@ -48,46 +47,47 @@ $userName = $_SESSION['user_nombre'] ?? 'Admin';
       </div>
     </div>
   </nav>
+  <main>
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <h1>Dark Souls</h1>
+      <img src="../assets/img/DarkSoulsGIF.gif" alt="Dark Souls Banner">
+    </section>
 
-  <!-- ===== HERO ===== -->
-  <section class="hero">
-    <h1>Dark Souls</h1>
-    <img src="../assets/img/DarkSoulsGIF.gif" alt="Dark Souls Banner">
-  </section>
-
-  <!-- ===== NOVEDADES DESTACADAS ===== -->
-  <section class="novedades">
-    <div class="novedades-titulo">
-      <h2>Novedades Destacadas</h2>
-    </div>
-
-    <div class="card">
-      <img src="../assets/img/DarksoulsRemastered.jpg" alt="Dark Souls Remastered">
-      <div class="info">
-        <h3>Dark Souls: Remastered</h3>
-        <p class="precio"><span>Desde 549 mx</span><br>10 Puntos</p>
-        <button>Más detalles</button>
+    <!-- ===== NOVEDADES DESTACADAS ===== -->
+    <section class="novedades">
+      <div class="novedades-titulo">
+        <h2>Novedades Destacadas</h2>
       </div>
-    </div>
 
-    <div class="card">
-      <img src="../assets/img/Logo33.png" alt="Clair Obscur: Expedition 33">
-      <div class="info">
-        <h3>Clair Obscur: Expedition 33</h3>
-        <p class="precio"><span>Desde 710 mx</span><br>10 Puntos</p>
-        <button>Más detalles</button>
+      <div class="card">
+        <img src="../assets/img/DarksoulsRemastered.jpg" alt="Dark Souls Remastered">
+        <div class="info">
+          <h3>Dark Souls: Remastered</h3>
+          <p class="precio"><span>Desde 549 mx</span><br>10 Puntos</p>
+          <button>Más detalles</button>
+        </div>
       </div>
-    </div>
 
-    <div class="card">
-      <img src="../assets/img/LogoRisk.png" alt="Risk of Rain 2">
-      <div class="info">
-        <h3>Risk of Rain 2</h3>
-        <p class="precio"><span>Desde 233 mx</span><br>10 Puntos</p>
-        <button>Más detalles</button>
+      <div class="card">
+        <img src="../assets/img/Logo33.png" alt="Clair Obscur: Expedition 33">
+        <div class="info">
+          <h3>Clair Obscur: Expedition 33</h3>
+          <p class="precio"><span>Desde 710 mx</span><br>10 Puntos</p>
+          <button>Más detalles</button>
+        </div>
       </div>
-    </div>
-  </section>
+
+      <div class="card">
+        <img src="../assets/img/LogoRisk.png" alt="Risk of Rain 2">
+        <div class="info">
+          <h3>Risk of Rain 2</h3>
+          <p class="precio"><span>Desde 233 mx</span><br>10 Puntos</p>
+          <button>Más detalles</button>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <!-- ===== FOOTER ===== -->
   <footer class="site-footer">
