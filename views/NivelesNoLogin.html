@@ -1,61 +1,67 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Niveles</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="../assets/style/main.css" />
-  </head>
 
-  <body>
-    <!-- NAVBAR -->
-    <header class="navbar">
-      <div class="logo">
-        <img src="../assets/img/LogoEnevo2.png" alt="Logo" />
-        <span class="brand">Enevo</span>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Niveles</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/style/main.css" />
+</head>
+
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="logo">
+      <img src="../assets/img/LogoEnevo2.png" alt="Logo" />
+      <span class="brand">Enevo</span>
+    </div>
+
+    <nav class="nav-links">
+      <a href="../index.html">Tienda</a>
+      <a href="#" class="active">Niveles</a>
+      <a href="#" class="btn-carrito">Carrito</a>
+      <a href="login.html">Iniciar Sesión</a>
+    </nav>
+  </header>
+
+  <!-- CONTENIDO -->
+  <main class="niveles-container">
+    <h2 class="niveles-title">Bienvenido al apartado de niveles</h2>
+
+    <p class="niveles-descripcion">
+      Aquí tus compras no solo te dan juegos, también te hacen subir de nivel
+      y ganar recompensas exclusivas.
+      <br /><br />
+      Empiezas en el Nivel Plata, donde por cada compra obtienes 10 puntos.
+      Estos puntos pueden usarse para conseguir descuentos o más juegos
+      totalmente gratis.
+      <br /><br />
+      A medida que compres más, subes de nivel automáticamente.
+    </p>
+
+    <h3 class="niveles-subtitle">Nuestros niveles son</h3>
+
+    <div id="nivelesClientesContainer"></div>
+  </main>
+  <div id="modalCarrito" class="modal oculto">
+    <div class="modal-content">
+      <p>Porfavor inicia sesion o registrate</p>
+      <button id="btnAceptar" class="btn-aceptar">Aceptar</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <img src="../assets/img/LogoEnevo.png" alt="Enevo Logo" />
+        <p>© 2025 – Todos los derechos reservados</p>
       </div>
+    </div>
+  </footer>
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/nivelesClientesPublic.js"></script>
+</body>
 
-      <nav class="nav-links">
-        <a href="../index.html">Tienda</a>
-        <a href="#" class="active">Niveles</a>
-        <a href="#S">Carrito</a>
-        <a href="login.html">Iniciar Sesión</a>
-      </nav>
-    </header>
-
-    <!-- CONTENIDO -->
-    <main class="niveles-container">
-      <h2 class="niveles-title">Bienvenido al apartado de niveles</h2>
-
-      <p class="niveles-descripcion">
-        Aquí tus compras no solo te dan juegos, también te hacen subir de nivel
-        y ganar recompensas exclusivas.
-        <br /><br />
-        Empiezas en el Nivel Plata, donde por cada compra obtienes 10 puntos.
-        Estos puntos pueden usarse para conseguir descuentos o más juegos
-        totalmente gratis.
-        <br /><br />
-        A medida que compres más, subes de nivel automáticamente.
-      </p>
-
-      <h3 class="niveles-subtitle">Nuestros niveles son</h3>
-
-      <div id="nivelesClientesContainer"></div>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="site-footer">
-      <div class="footer-inner">
-        <div class="footer-logo">
-          <img src="../assets/img/LogoEnevo.png" alt="Enevo Logo" />
-          <p>© 2025 – Todos los derechos reservados</p>
-        </div>
-      </div>
-    </footer>
-    <script src="../assets/js/nivelesClientesPublic.js"></script>
-  </body>
 </html>

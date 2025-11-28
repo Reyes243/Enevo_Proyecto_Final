@@ -491,3 +491,16 @@ if (window.location.pathname.includes("MasDetalles.php")) {
     });
   }
 })();
+const btnCarrito = document.querySelector('.btn-carrito');
+const modal = document.getElementById('modalCarrito');
+const btnAceptar = document.getElementById('btnAceptar');
+
+btnCarrito.addEventListener('click', (e) => {
+  e.preventDefault();
+  modal.classList.remove('oculto');
+});
+
+btnAceptar.addEventListener('click', () => {
+  modal.classList.add('oculto');
+});
+

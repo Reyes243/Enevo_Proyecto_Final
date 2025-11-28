@@ -20,7 +20,7 @@
     <nav class="nav-links">
       <a href="#" class="active">Tienda</a>
       <a href="views/NivelesNoLogin.html">Niveles</a>
-      <a href="#">Carrito</a>
+      <a href="#" class="btn-carrito">Carrito</a>
       <a href="views/login.html">Iniciar Sesión</a>
     </nav>
   </header>
@@ -64,6 +64,12 @@
 
     </section>
   </main>
+  <div id="modalCarrito" class="modal oculto">
+    <div class="modal-content">
+      <p>Porfavor inicia sesion o registrate</p>
+      <button id="btnAceptar" class="btn-aceptar">Aceptar</button>
+    </div>
+  </div>
 
   <footer class="site-footer">
     <div class="footer-inner">
@@ -73,6 +79,7 @@
       </div>
     </div>
   </footer>
+
 
   <script src="assets/js/main.js"></script>
 </body>
