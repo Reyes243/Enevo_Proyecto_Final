@@ -4,11 +4,22 @@
   padding: 0;
   box-sizing: border-box;
 }
+html,
+body {
+  height: 100%;
+}
 
 body {
+  
   font-family: "Poppins", sans-serif;
   background-color: #363d57;
   color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
 }
 
 /* ========================================
@@ -621,7 +632,7 @@ button:hover {
 }
 
 .btn-agregar {
-  background-color: #1F2833;
+  background-color: #1f2833;
   color: #ffffff;
   border: none;
   padding: 10px 30px;
@@ -1010,4 +1021,321 @@ button:hover {
   .hero img {
     max-width: 100%;
   }
+}
+/* ===== clientesAdmin ===== */
+
+* {
+  box-sizing: border-box;
+}
+
+
+.clientes-admin-container,
+.clientes-container {
+  max-width: 920px; 
+  width: 55%; 
+  margin: 28px auto; 
+  position: relative;
+  padding: 0;
+}
+
+
+.clientes-header {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  gap: 16px; 
+  margin-bottom: 15px;
+  flex-wrap: nowrap;
+}
+
+
+.clientes-title {
+  font-size: 28px;
+  color: #ffffff;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+}
+
+
+.btn-agregar,
+.btn-agregar-top {
+  background: #ffd700;
+  color: #000;
+  padding: 10px 20px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+  transition: background 0.12s ease, transform 0.12s ease;
+  white-space: nowrap; 
+}
+
+.btn-agregar:hover,
+.btn-agregar-top:hover {
+  background: #e0b800;
+  transform: scale(0.97);
+}
+
+
+.tabla-wrapper,
+.tabla-contenedor {
+  background: #1f2833; 
+  padding: 28px;
+  margin-top: 18px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+
+
+.tabla-clientes,
+.tabla-clientes-admin {
+  width: 100%;
+  border-collapse: collapse;
+  color: #e6eefc;
+  font-size: 0.95rem;
+  table-layout: auto;
+}
+
+
+.tabla-clientes thead th,
+.tabla-clientes-admin thead th {
+  background: transparent;
+  color: #fff;
+  font-weight: 700;
+  padding: 14px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+
+.tabla-clientes tbody tr,
+.tabla-clientes-admin tbody tr {
+  background: transparent;
+}
+
+.tabla-clientes tbody td,
+.tabla-clientes-admin tbody td {
+  padding: 12px 12px;
+  vertical-align: middle;
+  color: #d6d9df;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+
+.tabla-clientes tbody td:first-child,
+.tabla-clientes-admin tbody td:first-child {
+  width: 6%;
+  color: #cfcfcf;
+}
+
+
+.tabla-clientes thead th:nth-child(2),
+.tabla-clientes-admin thead th:nth-child(2) {
+  width: 28%;
+}
+.tabla-clientes thead th:nth-child(3),
+.tabla-clientes-admin thead th:nth-child(3) {
+  width: 18%;
+}
+.tabla-clientes thead th:nth-child(4),
+.tabla-clientes-admin thead th:nth-child(4) {
+  width: 34%;
+}
+
+
+.correo-link,
+.tabla-clientes a,
+.tabla-clientes-admin a {
+  color: #9ec8ff;
+  text-decoration: underline;
+  font-size: 0.95rem;
+}
+
+
+.btn-editar,
+.btn-editar-custom,
+.btn-editar-custom button,
+.btn-editar-small {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffd700;
+  color: #000;
+  border: none;
+  padding: 8px 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+.btn-editar:hover {
+  background: #e0b800;
+}
+
+
+.btn-eliminar,
+.btn-eliminar-custom,
+.btn-eliminar-small {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #e32b2b;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+.btn-eliminar:hover {
+  background: #ff4848;
+}
+
+
+.btn-editar img,
+.btn-eliminar img,
+.btn-editar-custom img,
+.btn-eliminar-custom img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  display: inline-block;
+}
+
+
+.tabla-clientes td > .btn-editar,
+.tabla-clientes td > .btn-eliminar,
+.tabla-clientes-admin td > .btn-editar,
+.tabla-clientes-admin td > .btn-eliminar {
+  margin: 0;
+}
+
+
+.tabla-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+.site-footer,
+footer.site-footer {
+  margin-top: 38px;
+}
+
+
+.clientes-admin-container * {
+  position: relative;
+}
+
+
+.clientes-admin-container,
+.clientes-container,
+.tabla-clientes,
+.tabla-clientes-admin {
+  font-family: "Poppins", sans-serif;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 960px) {
+  .clientes-admin-container,
+  .clientes-container {
+    width: 88%;
+  }
+
+
+  .btn-agregar,
+  .btn-agregar-top {
+    position: static;
+    transform: none;
+    display: inline-block;
+    margin-left: auto;
+  }
+
+  .clientes-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tabla-clientes thead th,
+  .tabla-clientes-admin thead th {
+    padding: 10px 8px;
+    font-size: 0.82rem;
+  }
+  .tabla-clientes tbody td,
+  .tabla-clientes-admin tbody td {
+    padding: 10px 8px;
+    font-size: 0.82rem;
+  }
+  .btn-editar,
+  .btn-eliminar {
+    padding: 6px 8px;
+    font-size: 0.82rem;
+  }
+}
+/* ===== CONTENIDO VENTAS ===== */
+
+
+.contenido {
+    background-color: #363D57;
+    width: 50%;             
+    margin: 40px auto;
+    padding: 40px 30px;
+
+    text-align: center;
+}
+
+.contenido h2 {
+    font-size: 40px;
+    margin-bottom: 35px;
+    font-weight: 600;
+}
+
+/* ===== TABLA ===== */
+.tabla-container {
+    background-color: #1F2833;
+    width: 100%;             
+    padding: 30px;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;       
+    color: white;
+    font-size: 15px;
+}
+
+
+thead th:nth-child(1),
+tbody td:nth-child(1) {
+    width: 10%;
+    text-align: left;
+}
+
+thead th:nth-child(2),
+tbody td:nth-child(2) {
+    width: 65%;
+    text-align: left;
+}
+
+thead th:nth-child(3),
+tbody td:nth-child(3) {
+    width: 25%;
+    text-align: right;       
+}
+
+/* Encabezados */
+thead th {
+    padding-bottom: 15px;
+    font-weight: 600;
+}
+
+/* Filas */
+tbody tr td {
+    padding: 12px 0;
+    font-weight: 300;
 }
