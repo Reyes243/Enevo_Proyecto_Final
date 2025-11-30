@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3308
--- Tiempo de generación: 26-11-2025 a las 20:12:41
+-- Tiempo de generación: 30-11-2025 a las 21:25:48
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,6 +20,45 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `enevo`
 --
+
+DELIMITER $$
+--
+-- Procedimientos
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procesar_compra` (IN `p_cliente_id` INT, IN `p_monto` DECIMAL(10,2))   BEGIN
+  DECLARE v_puntos INT;
+  DECLARE v_total_puntos INT;
+  DECLARE v_nivel_id INT;
+
+  -- regla de negocio: 1 punto por cada unidad monetaria (ajusta según tu política)
+  SET v_puntos = FLOOR(p_monto);
+
+  -- insertar la compra
+  INSERT INTO compras (cliente_id, fecha, monto, puntos_generados)
+  VALUES (p_cliente_id, CURRENT_TIMESTAMP(), p_monto, v_puntos);
+
+  -- sumar puntos al cliente
+  UPDATE clientes
+    SET puntos_acumulados = COALESCE(puntos_acumulados,0) + v_puntos
+    WHERE id = p_cliente_id;
+
+  -- obtener puntos totales actualizados
+  SELECT puntos_acumulados INTO v_total_puntos FROM clientes WHERE id = p_cliente_id;
+
+  -- determinar el nivel correspondiente: el nivel con mayor puntos_minimos <= puntos_totales
+  SELECT id INTO v_nivel_id
+    FROM niveles
+    WHERE puntos_minimos <= v_total_puntos
+    ORDER BY puntos_minimos DESC
+    LIMIT 1;
+
+  -- actualizar el nivel si corresponde
+  IF v_nivel_id IS NOT NULL THEN
+    UPDATE clientes SET nivel_id = v_nivel_id WHERE id = p_cliente_id;
+  END IF;
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -51,6 +90,36 @@ CREATE TABLE `compras` (
   `puntos_generados` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Disparadores `compras`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_after_insert_compra` AFTER INSERT ON `compras` FOR EACH ROW BEGIN
+  DECLARE v_total_puntos INT;
+  DECLARE v_nivel_id INT;
+
+  -- sumar puntos generados por la compra al cliente
+  UPDATE clientes
+    SET puntos_acumulados = COALESCE(puntos_acumulados,0) + COALESCE(NEW.puntos_generados,0)
+    WHERE id = NEW.cliente_id;
+
+  -- obtener puntos totales
+  SELECT puntos_acumulados INTO v_total_puntos FROM clientes WHERE id = NEW.cliente_id;
+
+  -- determinar nivel correcto
+  SELECT id INTO v_nivel_id
+    FROM niveles
+    WHERE puntos_minimos <= v_total_puntos
+    ORDER BY puntos_minimos DESC
+    LIMIT 1;
+
+  IF v_nivel_id IS NOT NULL THEN
+    UPDATE clientes SET nivel_id = v_nivel_id WHERE id = NEW.cliente_id;
+  END IF;
+END
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -70,7 +139,11 @@ CREATE TABLE `niveles` (
 --
 
 INSERT INTO `niveles` (`id`, `nombre`, `puntos_minimos`, `compras_necesarias`, `beneficios`) VALUES
-(1, 'Bronce', 100, 1, 'El mejor nivel para iniciar en la plataforma');
+(1, 'Bronce', 100, 1, 'El mejor nivel para iniciar en la plataforma'),
+(4, 'Plata', 500, 5, '10% descuento'),
+(5, 'Oro', 1500, 15, '15% descuento + prioridad'),
+(6, 'Platino', 3000, 30, '20% descuento + soporte VIP'),
+(7, 'Diamante', 6000, 60, '25% descuento + invitaciones VIP');
 
 -- --------------------------------------------------------
 
@@ -98,6 +171,29 @@ CREATE TABLE `recompensas_canjeadas` (
   `recompensa_id` int(11) NOT NULL,
   `fecha_canjeo` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Disparadores `recompensas_canjeadas`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_before_recompensa_canjeada` BEFORE INSERT ON `recompensas_canjeadas` FOR EACH ROW BEGIN
+  DECLARE v_costo INT;
+  DECLARE v_puntos INT;
+
+  SELECT costo_puntos INTO v_costo FROM recompensas WHERE id = NEW.recompensa_id;
+  SELECT COALESCE(puntos_acumulados,0) INTO v_puntos FROM clientes WHERE id = NEW.cliente_id;
+
+  IF v_puntos < v_costo THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No tiene puntos suficientes para este canje.';
+  ELSE
+    -- resta puntos (se realiza antes del INSERT para asegurar atomicidad)
+    UPDATE clientes
+      SET puntos_acumulados = puntos_acumulados - v_costo
+      WHERE id = NEW.cliente_id;
+  END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -131,7 +227,32 @@ INSERT INTO `usuarios` (`id`, `username`, `password_hash`, `email`, `rol`, `fech
 (13, 'Admin123', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin@gmail.com', 'admin', '2025-11-20 22:49:42'),
 (14, 'Wesley', '$2y$10$qyNUTFc7wpxnsDvLaVAdlOq.g.ZoALC0Cu/FxYE27N59QhG41S9S2', 'we@gmail.com', 'cliente', '2025-11-20 23:55:34'),
 (15, 'DiegoEmiliano', '$2y$10$vgDfWzZOAXrA3i6osxlZj.Nl9VHpGy7qLWFFyIUEUcX6bNuxDKxRW', 'demi@gmail.com', 'admin', '2025-11-25 19:21:55'),
-(16, 'Wenseslao', '$2y$10$epgwZ0cpWbrSjP0kQbeGzeO3.RInQH9C.kZJRnxhk5Pu6gCVhY.dK', 'sistemas@gmail.com', 'cliente', '2025-11-26 18:18:25');
+(16, 'Wenseslao', '$2y$10$epgwZ0cpWbrSjP0kQbeGzeO3.RInQH9C.kZJRnxhk5Pu6gCVhY.dK', 'sistemas@gmail.com', 'cliente', '2025-11-26 18:18:25'),
+(17, 'NahomiVildosola', '$2y$10$cumg0UntOvyfQGRxUiQJqORdT9d.gEmXTmfQEVu./xYYxolVggp.q', 'naho@gmail.com', 'cliente', '2025-11-30 20:12:30');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `v_resumen_niveles`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `v_resumen_niveles` (
+`nivel_id` int(11)
+,`nivel_nombre` varchar(50)
+,`clientes_count` bigint(21)
+,`puntos_totales` decimal(32,0)
+,`monto_total_compras` decimal(54,2)
+,`promedio_monto_por_cliente` decimal(33,2)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `v_resumen_niveles`
+--
+DROP TABLE IF EXISTS `v_resumen_niveles`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_resumen_niveles`  AS SELECT `n`.`id` AS `nivel_id`, `n`.`nombre` AS `nivel_nombre`, count(`c`.`id`) AS `clientes_count`, coalesce(sum(`c`.`puntos_acumulados`),0) AS `puntos_totales`, coalesce(sum(`comp`.`total_monto`),0) AS `monto_total_compras`, coalesce(round(`comp`.`total_monto` / nullif(count(`c`.`id`),0),2),0) AS `promedio_monto_por_cliente` FROM ((`niveles` `n` left join `clientes` `c` on(`c`.`nivel_id` = `n`.`id`)) left join (select `compras`.`cliente_id` AS `cliente_id`,sum(`compras`.`monto`) AS `total_monto` from `compras` group by `compras`.`cliente_id`) `comp` on(`comp`.`cliente_id` = `c`.`id`)) GROUP BY `n`.`id`, `n`.`nombre` ;
 
 --
 -- Índices para tablas volcadas
@@ -201,7 +322,7 @@ ALTER TABLE `compras`
 -- AUTO_INCREMENT de la tabla `niveles`
 --
 ALTER TABLE `niveles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `recompensas`
@@ -219,7 +340,7 @@ ALTER TABLE `recompensas_canjeadas`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- Restricciones para tablas volcadas
