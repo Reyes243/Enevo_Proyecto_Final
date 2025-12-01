@@ -41,7 +41,7 @@
         <div class="nav-links">
             <a href="principalAdmin.php">Tienda</a>
             <a href="NivelesAdmin.php" class="active">Niveles</a>
-            <a href="#">Clientes</a>
+            <a href="ClientesAdmin.php">Clientes</a>
             <a href="Ventas.php">Ventas</a>
 
             <div class="user-section">

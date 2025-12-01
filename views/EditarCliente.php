@@ -52,34 +52,54 @@ $userName = $_SESSION['user_nombre'] ?? 'Admin';
     </nav>
 
     <!-- CONTENIDO -->
-    <main class="clientes-admin-wrapper">
+    <main>
+        <div class="editCliente-container">
 
-        <div class="titulo-con-agregar">
-            <h2 class="clientes-titulo">Bienvenido al apartado de Clientes</h2>
-            <button class="btn-agregar-cliente" onclick="irAgregarCliente()">Agregar</button>
-        </div>
+            <h2 class="editCliente-title">ID Cliente: <span id="idClienteTexto">1</span></h2>
 
+            <div class="editCliente-card">
 
-        <!-- TABLA -->
-        <div class="clientes-tabla-contenedor">
-            <table class="tabla-clientes">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Nivel</th>
-                        <th>Correo</th>
-                        <th>Editar</th>
-                        <th>Eliminar</th>
-                    </tr>
-                </thead>
+                <!-- COLUMNA IZQUIERDA -->
+                <div class="editCliente-left">
 
-                <tbody id="clienteListado">
-                    <!-- generado dinámicamente -->
-                </tbody>
-            </table>
+                    <img src="../assets/img/usuario.png" class="editCliente-avatar">
+
+                    <div class="editCliente-info">
+                        <p><strong>Nombre:</strong> <span id="nombreTexto"></span></p>
+                        <p><strong>Correo:</strong> <span id="correoTexto"></span></p>
+                        <p><strong>Nivel:</strong> <span id="nivelTexto"></span></p>
+                        <p><strong>Siguiente nivel:</strong> <span id="sigNivelTexto"></span></p>
+                        <p><strong>Compras faltantes para siguiente nivel:</strong> <span id="faltantesTexto"></span></p>
+
+                    </div>
+
+                </div>
+
+                <!-- COLUMNA DERECHA (INPUTS) -->
+                <div class="editCliente-right">
+
+                    <input type="hidden" id="clienteId">
+
+                    <div class="editCliente-inputBox">
+                        <input type="text" id="editarNombre" class="editCliente-input">
+                    </div>
+
+                    <div class="editCliente-inputBox">
+                        <input type="email" id="editarCorreo" class="editCliente-input">
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="cliente-botones-2">
+                <button class="btn-cancelar" onclick="location.href='ClientesAdmin.php'">Cancelar</button>
+                <button class="btn-guardar" onclick="guardarCambios()">Guardar</button>
+            </div>
+
         </div>
     </main>
+
 
     <!-- FOOTER -->
     <footer class="site-footer">

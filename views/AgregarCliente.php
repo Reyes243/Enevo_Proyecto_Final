@@ -52,33 +52,49 @@ $userName = $_SESSION['user_nombre'] ?? 'Admin';
     </nav>
 
     <!-- CONTENIDO -->
-    <main class="clientes-admin-wrapper">
+    <main>
+        <h2 class="titulo-externo-agregar">Bienvenido al apartado Agregar Cliente</h2>
 
-        <div class="titulo-con-agregar">
-            <h2 class="clientes-titulo">Bienvenido al apartado de Clientes</h2>
-            <button class="btn-agregar-cliente" onclick="irAgregarCliente()">Agregar</button>
+
+        <div class="cliente-contenedor">
+
+            
+
+
+            <form class="cliente-formulario" id="formAgregar">
+
+                <div class="cliente-grupo">
+                    <label>Nombre:</label>
+                    <input type="text" id="nuevoNombre" class="cliente-input">
+                </div>
+
+                <div class="cliente-grupo">
+                    <label>Correo:</label>
+                    <input type="email" id="nuevoCorreo" class="cliente-input">
+                </div>
+
+                <div class="cliente-grupo">
+                    <label>Contraseña:</label>
+                    <input type="password" id="nuevoPass" class="cliente-input">
+                </div>
+
+                <div class="cliente-grupo">
+                    <label>Confirmar Contraseña:</label>
+                    <input type="password" id="nuevoPass2" class="cliente-input">
+                </div>
+
+            </form>
+
+            
+
         </div>
+        <div class="cliente-botones">
+                <button class="btn-cliente-cancelar" onclick="location.href='ClientesAdmin.php'">Cancelar</button>
+                <button class="btn-cliente-guardar" onclick="agregarCliente()">Agregar</button>
+            </div>
 
 
-        <!-- TABLA -->
-        <div class="clientes-tabla-contenedor">
-            <table class="tabla-clientes">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Nivel</th>
-                        <th>Correo</th>
-                        <th>Editar</th>
-                        <th>Eliminar</th>
-                    </tr>
-                </thead>
 
-                <tbody id="clienteListado">
-                    <!-- generado dinámicamente -->
-                </tbody>
-            </table>
-        </div>
     </main>
 
     <!-- FOOTER -->
