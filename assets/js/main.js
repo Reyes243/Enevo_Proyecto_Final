@@ -30,7 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Mostrar mensaje de error si existe
   if (error && errorMessages[error]) {
-    // Crear elemento de alerta
     const alertDiv = document.createElement("div");
     alertDiv.className = "alert-error";
     alertDiv.innerHTML = `
@@ -38,7 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
       <button class="alert-close">&times;</button>
     `;
 
-    // Insertar al inicio del body o dentro de .login-box o .register-box
     const loginBox =
       document.querySelector(".login-box") ||
       document.querySelector(".register-box");
@@ -48,15 +46,12 @@ document.addEventListener("DOMContentLoaded", function () {
       document.body.insertBefore(alertDiv, document.body.firstChild);
     }
 
-    // Cerrar alerta al hacer clic en X
     const closeBtn = alertDiv.querySelector(".alert-close");
     closeBtn.addEventListener("click", () => {
       alertDiv.remove();
-      // Limpiar URL
       window.history.replaceState({}, document.title, window.location.pathname);
     });
 
-    // Auto-cerrar después de 5 segundos
     setTimeout(() => {
       if (alertDiv.parentElement) {
         alertDiv.remove();
@@ -117,7 +112,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const emailInput = loginForm.querySelector('input[type="email"]');
     const passInput = loginForm.querySelector('input[type="password"]');
 
-    // ---- Helpers de errores ----
     function createErrorEl(text) {
       const el = document.createElement("div");
       el.className = "input-error";
@@ -189,7 +183,6 @@ document.addEventListener("DOMContentLoaded", function () {
       'input[name="confirm_password"]'
     );
 
-    // ---- Helpers de errores ----
     function createErrorEl(text) {
       const el = document.createElement("div");
       el.className = "input-error";
@@ -250,7 +243,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       if (!hasError) {
-        // PERMITIR QUE PHP REGISTRE AL USUARIO REALMENTE
         return;
       }
 
@@ -271,236 +263,26 @@ document.addEventListener("DOMContentLoaded", function () {
       localStorage.removeItem("Usuario");
       localStorage.removeItem("usuarioLogeado");
 
-      // Redirigir al logout de PHP para destruir la sesión
+      // Redirigir al logout de PHP
       window.location.href = "../assets/app/controllers/LogoutController.php";
     });
   }
 
-// ===========================================================
-//          SISTEMA DE DETALLES DINÁMICOS (JUEGOS)
-// ===========================================================
-document.querySelectorAll(".btn-mas-detalles").forEach((btn) => {
-  btn.addEventListener("click", function () {
-    const juegoID = this.dataset.juego;
-    localStorage.setItem("juegoSeleccionado", juegoID);
+  // ===========================================================
+  //          MODAL DE CARRITO (SOLO INDEX.HTML)
+  // ===========================================================
+  const btnCarrito = document.querySelector(".btn-carrito");
+  const modal = document.getElementById("modalCarrito");
+  const btnAceptar = document.getElementById("btnAceptar");
 
-    // Detectar si viene de principal
-    const vieneDePrincipal =
-      window.location.pathname.includes("principal") ||
-      window.location.pathname.includes("PrincipalUser");
+  if (btnCarrito && modal && btnAceptar) {
+    btnCarrito.addEventListener("click", (e) => {
+      e.preventDefault();
+      modal.classList.remove("oculto");
+    });
 
-    localStorage.setItem(
-      "vieneDePrincipal",
-      vieneDePrincipal ? "true" : "false"
-    );
-
-    // 👉 Redirección correcta SIEMPRE a .php
-    window.location.href = "../views/MasDetalles.php";
-  });
-});
-
-// ===========================================================
-//      CARGAR DATOS EN MasDetalles.php
-// ===========================================================
-if (window.location.pathname.includes("MasDetalles.php")) {
-  const usuarioLogeado = localStorage.getItem("usuarioLogeado") === "true";
-  const vieneDePrincipal = localStorage.getItem("vieneDePrincipal") === "true";
-
-  if (!usuarioLogeado && !vieneDePrincipal) {
-    const barraUsuario = document.getElementById("barra-usuario");
-    if (barraUsuario) barraUsuario.style.display = "none";
-  }
-
-  const juegos = {
-    darksouls: {
-      titulo: "Dark Souls: Remastered",
-      img: "../assets/img/DarksoulsRemastered.jpg",
-      precio: "Mex$ 549.00 o 45 Puntos",
-      descripcion: `
-        Entonces, hubo fuego. Vuelve a experimentar el juego que definió un género,
-        remasterizado en alta definición y funcionando a 60 FPS.
-      `,
-      requisitos: [
-        "SO: Windows 7 64-bit",
-        "CPU: Intel i5-2300 / AMD FX-6300",
-        "RAM: 8 GB",
-        "GPU: GTX 460 / Radeon HD 6870",
-        "DirectX 11",
-        "8 GB de espacio disponible",
-      ],
-    },
-
-    expedition33: {
-      titulo: "Clair Obscur: Expedition 33",
-      img: "../assets/img/Logo33.png",
-      precio: "Mex$ 710.00 o 65 Puntos",
-      descripcion: `
-        Un RPG artístico con combate por turnos y un mundo misterioso por descubrir.
-      `,
-      requisitos: [
-        "SO: Windows 10 64-bit",
-        "CPU: Ryzen 5 / i5 9th Gen",
-        "RAM: 16 GB",
-        "GPU: GTX 1070 / RX 590",
-        "DirectX 12",
-        "30 GB disponibles",
-      ],
-    },
-
-    risk2: {
-      titulo: "Risk of Rain 2",
-      img: "../assets/img/LogoRisk.png",
-      precio: "Mex$ 233.00 o 20 Puntos",
-      descripcion: `
-        Un roguelike cooperativo en 3D donde cada partida es diferente.
-      `,
-      requisitos: [
-        "SO: Windows 7 64-bit",
-        "CPU: Intel Core i3-6100",
-        "RAM: 4 GB",
-        "GPU: GTX 580",
-        "DirectX 11",
-        "4 GB disponibles",
-      ],
-    },
-  };
-
-  const gameID = localStorage.getItem("juegoSeleccionado");
-  const game = juegos[gameID];
-
-  if (game) {
-    document.getElementById("game-title").innerText = game.titulo;
-    document.getElementById("game-img").src = game.img;
-    document.getElementById("game-price").innerText = game.precio;
-    document.getElementById("buy-title").innerText = "Comprar " + game.titulo;
-    document.getElementById("game-desc").innerHTML = game.descripcion;
-
-    const reqList = document.getElementById("req-list");
-    reqList.innerHTML = "";
-    game.requisitos.forEach((req) => {
-      const li = document.createElement("li");
-      li.textContent = req;
-      reqList.appendChild(li);
+    btnAceptar.addEventListener("click", () => {
+      modal.classList.add("oculto");
     });
   }
-}
-
 });
-
-// ==========================================================
-//  CARGAR DATOS EN MasDetallesNoLogin.html
-// ==========================================================
-
-(() => {
-  console.log("Sistema NO LOGIN cargado sin interferir con el main viejo.");
-
-  const juegosNoLogin = {
-    darksouls_p: {
-      titulo: "Dark Souls: Remastered",
-      imagen: "../assets/img/DarksoulsRemastered.jpg",
-      precio: "Mex$ 549.00 o 45 Puntos",
-      descripcion:
-        "Entonces, hubo fuego. Vuelve a experimentar el juego que definió un género , remasterizado en alta definición y funcionando a 60 FPS",
-      requisitos: [
-        "SO: Windows 7 64-bit",
-        "CPU: Intel i5-2300 / AMD FX-6300",
-        "RAM: 8 GB",
-        "GPU: GTX 460 / Radeon HD 6870",
-        "DirectX 11",
-        "8 GB de espacio disponible",
-      ],
-    },
-
-    expedition33_p: {
-      titulo: "Expedition 33",
-      imagen: "../assets/img/Logo33.png",
-      precio: "Mex$ 710.00 o 65 Puntos",
-      descripcion:
-        "Un RPG artístico con combate por turnos y un mundo misterioso por descubrir.",
-      requisitos: [
-        "SO: Windows 10 64-bit",
-        "CPU: Ryzen 5 / i5 9th Gen",
-        "RAM: 16 GB",
-        "GPU: GTX 1070 / RX 590",
-        "DirectX 12",
-        "30 GB disponibles",
-      ],
-    },
-
-    risk2_p: {
-      titulo: "Risk of Rain 2",
-      imagen: "../assets/img/LogoRisk.png",
-      precio: "Mex$ 233.00 o 20 Puntos",
-      descripcion:
-        "Un roguelike cooperativo en 3D donde cada partida es diferente",
-      requisitos: [
-        "SO: Windows 7 64-bit",
-        "CPU: Intel Core i3-6100",
-        "RAM: 4 GB",
-        "GPU: GTX 580",
-        "DirectX 11",
-        "4 GB disponibles",
-      ],
-    },
-  };
-
-  // =============================
-  //  BOTONES DEL INDEX
-  // =============================
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const botones = document.querySelectorAll(".btn-mas-detalles");
-
-    botones.forEach((btn) => {
-      const gameID = btn.getAttribute("data-juego");
-
-      if (gameID && gameID.endsWith("_p")) {
-        btn.addEventListener("click", () => {
-          localStorage.setItem("juegoSeleccionadoNL", gameID);
-          window.location.href = "views/MasDetallesNoLogin.html";
-        });
-      }
-    });
-  });
-
-  // =============================
-  //  MOSTRAR DETALLES
-  // =============================
-  if (window.location.pathname.includes("MasDetallesNoLogin")) {
-    const id = localStorage.getItem("juegoSeleccionadoNL");
-
-    if (!id || !juegosNoLogin[id]) {
-      console.warn("Juego no encontrado en sistema NL");
-      return;
-    }
-
-    const j = juegosNoLogin[id];
-
-    document.getElementById("game-nl-title").textContent = j.titulo;
-    document.getElementById("game-nl-img").src = j.imagen;
-    document.getElementById("buy-nl-title").textContent = "Comprar " + j.titulo;
-    document.getElementById("game-nl-price").textContent = j.precio;
-    document.getElementById("game-nl-desc").textContent = j.descripcion;
-    const reqList = document.getElementById("req-nl-list");
-    reqList.innerHTML = "";
-
-    j.requisitos.forEach((r) => {
-      const li = document.createElement("li");
-      li.textContent = r;
-      reqList.appendChild(li);
-    });
-  }
-})();
-const btnCarrito = document.querySelector('.btn-carrito');
-const modal = document.getElementById('modalCarrito');
-const btnAceptar = document.getElementById('btnAceptar');
-
-btnCarrito.addEventListener('click', (e) => {
-  e.preventDefault();
-  modal.classList.remove('oculto');
-});
-
-btnAceptar.addEventListener('click', () => {
-  modal.classList.add('oculto');
-});
-

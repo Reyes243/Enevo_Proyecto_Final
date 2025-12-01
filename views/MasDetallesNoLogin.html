@@ -1,81 +1,72 @@
 <!DOCTYPE html>
 <html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalles del Juego — Enevo</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Detalles del Juego — Enevo</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/style/main.css" />
+  </head>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/style/main.css">
-</head>
+  <body>
+    <nav class="navbar">
+      <div class="logo">
+        <img src="../assets/img/LogoEnevo2.png" alt="Logo Enevo" />
+        <span class="brand">Enevo</span>
+      </div>
 
-<body>
+      <div class="nav-links">
+        <a href="../index.html">Tienda</a>
+        <a href="NivelesNoLogin.html">Niveles</a>
+        <a href="#">Carrito</a>
+        <a href="login.html">Iniciar Sesión</a>
+      </div>
+    </nav>
 
+    <main class="novedades" style="max-width: 760px; margin: 20px auto">
+      <div class="details-card">
+        <h1 id="game-nl-title" class="details-title"></h1>
 
-  <nav class="navbar">
-    <div class="logo">
-      <img src="../assets/img/LogoEnevo2.png" alt="Logo Enevo">
-      <span class="brand">Enevo</span>
-    </div>
+        <img id="game-nl-img" class="details-hero" src="" alt="Juego" />
 
-    <div class="nav-links">
-      <a href="../index.html">Tienda</a>
-      <a href="NivelesNoLogin.html">Niveles</a>
-      <a href="#">Carrito</a>
-      <a href="login.html">Iniciar Sesión</a>
-    </div>
-  </nav>
+        <div class="buy-row">
+          <div class="buy-text">
+            <strong id="buy-nl-title"></strong><br />
+            <small>Versión digital · Plataforma: PC</small>
+          </div>
 
-
-  <main class="novedades" style="max-width: 760px; margin: 20px auto;">
-    <div class="details-card">
-
-      
-      <h1 id="game-nl-title" class="details-title"></h1>
-
-      
-      <img id="game-nl-img" class="details-hero" src="" alt="Juego">
-
-     
-      <div class="buy-row">
-        <div class="buy-text">
-          <strong id="buy-nl-title"></strong><br>
-          <small>Versión digital · Plataforma: PC</small>
+          <div class="buy-actions">
+            <div class="price-box" id="game-nl-price"></div>
+            <button class="btn-buy" type="button">Agregar al carrito</button>
+          </div>
         </div>
 
-        <div class="buy-actions">
-          <div class="price-box" id="game-nl-price"></div>
-          <button class="btn-buy" type="button">Agregar al carrito</button>
+        <div class="section">
+          <h4>ACERCA DE ESTE JUEGO</h4>
+          <p class="text-muted" id="game-nl-desc"></p>
+        </div>
+
+        <div class="section requirements">
+          <h4>REQUISITOS DEL SISTEMA</h4>
+          <ul id="req-nl-list"></ul>
         </div>
       </div>
+    </main>
 
-      
-      <div class="section">
-        <h4>ACERCA DE ESTE JUEGO</h4>
-        <p class="text-muted" id="game-nl-desc"></p>
+    <footer class="site-footer" style="margin-top: 20px">
+      <div class="footer-inner">
+        <div class="footer-logo">
+          <img src="../assets/img/LogoEnevo.png" alt="Enevo Logo" />
+          <p>© 2025 – Todos los derechos reservados</p>
+        </div>
       </div>
+    </footer>
 
-     
-      <div class="section requirements">
-        <h4>REQUISITOS DEL SISTEMA</h4>
-        <ul id="req-nl-list"></ul>
-      </div>
-
-    </div>
-  </main>
-
- 
-  <footer class="site-footer" style="margin-top:20px;">
-    <div class="footer-inner">
-      <div class="footer-logo">
-        <img src="../assets/img/LogoEnevo.png" alt="Enevo Logo">
-        <p>© 2025 – Todos los derechos reservados</p>
-      </div>
-    </div>
-  </footer>
-
-  <script src="../assets/js/main.js"></script>
-</body>
-
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/detallesjuegos.js"></script>
+  </body>
 </html>

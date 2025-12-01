@@ -100,7 +100,9 @@ $userName = $_SESSION['user_nombre'] ?? 'Admin';
   </footer>
 
   <!-- Script principal -->
+   <script src="../assets/js/juegos.js"></script>
   <script src="../assets/js/main.js"></script>
+
 </body>
 
 </html>
