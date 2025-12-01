@@ -26,24 +26,8 @@ if (!$conn) {
 $controller = new PerfilController($conn);
 $userName = $_SESSION['user_nombre'] ?? 'Usuario';
 
-// Procesar actualización del perfil
-$mensaje = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nombre'])) {
-    $resultado = $controller->actualizarPerfil($_SESSION['user_id'], $_POST);
-    
-    if ($resultado['success']) {
-        $mensaje = '<div class="alert success">' . $resultado['message'] . '</div>';
-        // Recargar datos actualizados
-        $datosPerfil = $controller->mostrarPerfil($_SESSION['user_id']);
-    } else {
-        $mensaje = '<div class="alert error">' . $resultado['message'] . '</div>';
-        $datosPerfil = $controller->mostrarPerfil($_SESSION['user_id']);
-    }
-} else {
-    // Cargar datos del perfil
-    $datosPerfil = $controller->mostrarPerfil($_SESSION['user_id']);
-}
-
+// Cargar datos del perfil
+$datosPerfil = $controller->mostrarPerfil($_SESSION['user_id']);
 $perfil = $datosPerfil['perfil'];
 $proximo_nivel = $datosPerfil['proximo_nivel'];
 $compras_faltantes = $datosPerfil['compras_faltantes'];
@@ -83,26 +67,22 @@ $compras_faltantes = $datosPerfil['compras_faltantes'];
         <section class="perfil-container">
             <h2 class="perfil-title">Mi Perfil</h2>
 
-            <?php echo $mensaje; ?>
-
             <div class="perfil-card">
                 <div class="perfil-left">
                     <img src="../assets/img/usuario.png" alt="Foto usuario" class="perfil-avatar">
 
-                    <!-- Formulario de edición -->
-                    <form method="POST" class="perfil-form">
-                        <div class="form-group">
-                            <label for="nombre">Nombre:</label>
-                            <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($perfil['nombre'] ?? $perfil['username'] ?? ''); ?>" required>
+                    <!-- Información del usuario (solo lectura) -->
+                    <div class="perfil-info">
+                        <div class="info-item">
+                            <label>Nombre:</label>
+                            <p><?php echo htmlspecialchars($perfil['nombre'] ?? $perfil['username'] ?? ''); ?></p>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="email">Correo:</label>
-                            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($perfil['email'] ?? ''); ?>" required>
+                        <div class="info-item">
+                            <label>Correo:</label>
+                            <p><?php echo htmlspecialchars($perfil['email'] ?? ''); ?></p>
                         </div>
-
-                        <button type="submit" class="btn-actualizar">Actualizar Perfil</button>
-                    </form>
+                    </div>
 
                     <div class="nivel-info">
                         <p><strong>Nivel Actual:</strong> <?php echo htmlspecialchars($perfil['nivel_nombre'] ?? 'Bronce'); ?></p>
@@ -123,7 +103,7 @@ $compras_faltantes = $datosPerfil['compras_faltantes'];
 
                     <div class="perfil-buttons">
                         <a href="HistorialCompras.php" class="btn-perfil">Ver Historial de Compras</a>
-                        <a href="../ExportarDatos.php" class="btn-perfil">Descargar Mis Datos</a>
+                        <a href="../ExportarDatos.php?formato=pdf" class="btn-perfil">Descargar PDF</a>
                     </div>
 
                     <div class="info-adicional">
