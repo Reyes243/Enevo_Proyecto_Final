@@ -34,5 +34,27 @@ class JuegoModel {
             return [];
         }
     }
+    public function getById($id) {
+    try {
+        $sql = "SELECT id, nombre, descripcion, precio, genero, plataforma, fecha_creacion 
+                FROM {$this->table} 
+                WHERE id = ? 
+                LIMIT 1";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        return $result->fetch_assoc() ?: null;
+
+    } catch (Exception $e) {
+        error_log("Error en getById: " . $e->getMessage());
+        return null;
+    }
 }
+
+}
+
 ?>

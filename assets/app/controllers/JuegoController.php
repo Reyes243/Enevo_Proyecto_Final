@@ -33,7 +33,9 @@ class JuegoController {
         exit();
     }
 
-    /** GET ALL */
+    /* =======================================
+       OBTENER TODOS LOS JUEGOS
+    ======================================= */
     public function getAllJuegos(){
         try{
             $juegos = $this->juegoModel->getAllJuegos();
@@ -42,22 +44,47 @@ class JuegoController {
             $this->sendJson(['success'=>false,'error'=>'fetch_failed']);
         }
     }
+
+    /* =======================================
+       OBTENER JUEGO POR ID (NECESARIO PARA CARRITO)
+    ======================================= */
+    public function getById($id){
+        try {
+            $juego = $this->juegoModel->getById($id);
+
+            if (!$juego) {
+                return ['success' => false, 'error' => 'not_found'];
+            }
+
+            return ['success' => true, 'data' => $juego];
+
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => 'db_error'];
+        }
+    }
 }
 
-////// PETICIONES //////
 
+/* =======================================
+   PETICIONES AJAX
+======================================= */
 $action = $_GET['action'] ?? $_POST['action'] ?? '';
-
 $controller = new JuegoController();
 
-switch($action){
+switch ($action) {
 
     case 'getAll':
         $controller->getAllJuegos();
+        break;
+
+    case 'getById':
+        $id = $_GET['id'] ?? $_POST['id'] ?? null;
+        echo json_encode($controller->getById($id));
         break;
 
     default:
         echo json_encode(['success'=>false,'error'=>'invalid_action']);
         break;
 }
+
 ?>

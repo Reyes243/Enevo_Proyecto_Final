@@ -352,8 +352,6 @@ function mostrarDatosClienteParaEditar(data) {
 
   // Actualizar textos informativos
   document.getElementById("idClienteTexto").textContent = cliente.id;
-  document.getElementById("nombreTexto").textContent = cliente.nombre;
-  document.getElementById("correoTexto").textContent = cliente.email;
   document.getElementById("nivelTexto").textContent = cliente.nivel_nombre;
 
   if (siguienteNivel) {
