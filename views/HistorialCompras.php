@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.html');
     exit();
@@ -12,7 +11,14 @@ if ($_SESSION['user_rol'] === 'admin') {
     exit();
 }
 
+// Incluir el modelo de compras
+require_once "../assets/app/models/CompraModel.php";
+
 $userName = $_SESSION['user_nombre'] ?? 'Usuario';
+
+// Obtener historial de compras del cliente
+$compraModel = new CompraModel();
+$historial = $compraModel->obtenerHistorialCompras($_SESSION['user_id']);
 ?>
 
 <!DOCTYPE html>
@@ -24,11 +30,7 @@ $userName = $_SESSION['user_nombre'] ?? 'Usuario';
     <title>Historial de compras</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/style/main.css">
-
-
 </head>
-
-
 
 <body>
 
@@ -60,50 +62,49 @@ $userName = $_SESSION['user_nombre'] ?? 'Usuario';
 
             <div class="historial-card">
 
-                <table class="historial-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Tipo</th>
-                            <th>Total</th>
-                            <th>Puntos Generados</th>
-                        </tr>
-                    </thead>
+                <?php if (empty($historial)) { ?>
+                    <p style="text-align: center; color: #666; padding: 40px 20px;">
+                        No tienes compras registradas aún.<br>
+                        <a href="principal.php" style="color: #2196F3; text-decoration: none;">← Ir a la tienda</a>
+                    </p>
+                <?php } else { ?>
 
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>DARK SOULS: REMASTERED</td>
-                            <td>Compra</td>
-                            <td>Mex$ 549.00</td>
-                            <td>10</td>
-                        </tr>
+                    <table class="historial-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Fecha</th>
+                                <th>Juego</th>
+                                <th>Cantidad</th>
+                                <th>Total</th>
+                                <th>Puntos Generados</th>
+                            </tr>
+                        </thead>
 
-                        <tr>
-                            <td>2</td>
-                            <td>Risk of Rain 2</td>
-                            <td>Canje</td>
-                            <td>Puntos 45</td>
-                            <td>0</td>
-                        </tr>
-                    </tbody>
-                </table>
+                        <tbody>
+                            <?php foreach ($historial as $compra) { ?>
+                                <tr>
+                                    <td><?php echo $compra['id']; ?></td>
+                                    <td><?php echo date('d/m/Y', strtotime($compra['fecha'])); ?></td>
+                                    <td><?php echo htmlspecialchars($compra['juego_nombre'] ?? 'N/A'); ?></td>
+                                    <td><?php echo $compra['cantidad']; ?></td>
+                                    <td>Mex$ <?php echo number_format($compra['monto'], 2); ?></td>
+                                    <td><?php echo $compra['puntos_generados']; ?></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
 
-                <div class="historial-btn-box">
-                    <a href="#" class="historial-btn">Descargar</a>
-                </div>
+                    <div class="historial-btn-box">
+                        <button class="historial-btn" onclick="descargarPDF()">Descargar PDF</button>
+                    </div>
+
+                <?php } ?>
 
             </div>
 
         </section>
-
-
     </main>
-
-
-
-
 
     <footer class="site-footer">
         <div class="footer-inner">
@@ -115,7 +116,18 @@ $userName = $_SESSION['user_nombre'] ?? 'Usuario';
     </footer>
 
     <!-- Scripts -->
-    <script src="../assets/js/main.js"></script>
+    <script>
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            window.location.href = '../assets/app/controllers/LogoutController.php';
+        });
+
+        // Función para descargar PDF (placeholder)
+        function descargarPDF() {
+            alert('Función de descarga de PDF en desarrollo');
+            // Aquí puedes implementar la generación de PDF más adelante
+        }
+    </script>
 </body>
 
 </html>

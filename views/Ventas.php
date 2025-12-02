@@ -7,7 +7,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_rol'] !== 'admin') {
     exit();
 }
 
+// Incluir el modelo de compras
+require_once "../assets/app/models/CompraModel.php";
+
 $userName = $_SESSION['user_nombre'] ?? 'Admin';
+
+// Obtener estadísticas de ventas
+$compraModel = new CompraModel();
+$ventas = $compraModel->obtenerEstadisticasVentas();
 ?>
 
 <!DOCTYPE html>
@@ -66,23 +73,21 @@ $userName = $_SESSION['user_nombre'] ?? 'Admin';
                     </thead>
 
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>DARK SOULS: REMASTERED</td>
-                            <td>5</td>
-                        </tr>
-
-                        <tr>
-                            <td>2</td>
-                            <td>Risk of Rain 2</td>
-                            <td>10</td>
-                        </tr>
-
-                        <tr>
-                            <td>3</td>
-                            <td>Clair Obscur: Expedition 33</td>
-                            <td>15</td>
-                        </tr>
+                        <?php if (empty($ventas)) { ?>
+                            <tr>
+                                <td colspan="3" style="text-align: center; padding: 40px; color: #666;">
+                                    No hay ventas registradas aún.
+                                </td>
+                            </tr>
+                        <?php } else { ?>
+                            <?php foreach ($ventas as $venta) { ?>
+                                <tr>
+                                    <td><?php echo $venta['id']; ?></td>
+                                    <td><?php echo htmlspecialchars($venta['nombre']); ?></td>
+                                    <td><?php echo number_format($venta['copias_vendidas']); ?></td>
+                                </tr>
+                            <?php } ?>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>
