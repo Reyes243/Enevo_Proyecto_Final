@@ -90,6 +90,53 @@ class CompraController
     {
         return floor($monto / 10);
     }
+
+    /**
+     * Procesar la compra usando puntos acumulados del cliente
+     * @return array
+     */
+    public static function procesarCompraConPuntos()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            return ['success' => false, 'message' => 'Debe iniciar sesión para realizar una compra'];
+        }
+
+        $carrito = CarritoController::obtenerCarrito();
+        if (empty($carrito)) {
+            return ['success' => false, 'message' => 'El carrito está vacío'];
+        }
+
+        // Calcular puntos requeridos por el carrito (misma regla que en frontend)
+        $puntos_requeridos = 0;
+        foreach ($carrito as $item) {
+            $puntos_unit = floor($item['precio'] / 50);
+            $puntos_requeridos += $puntos_unit * $item['cantidad'];
+        }
+
+        $model = new CompraModel();
+        $cliente_id = $model->obtenerClienteId($_SESSION['user_id']);
+        if (!$cliente_id) {
+            return ['success' => false, 'message' => 'Cliente no encontrado'];
+        }
+
+        $puntos_actuales = $model->obtenerPuntosCliente($cliente_id);
+        if ($puntos_actuales === null) {
+            return ['success' => false, 'message' => 'No se pudo obtener los puntos del cliente'];
+        }
+
+        if ($puntos_actuales < $puntos_requeridos) {
+            return ['success' => false, 'message' => 'Puntos insuficientes', 'puntos_actuales' => $puntos_actuales, 'puntos_requeridos' => $puntos_requeridos];
+        }
+
+        // Procesar compra con puntos usando el modelo
+        $resultado = $model->procesarCompraCarritoConPuntos($_SESSION['user_id'], $carrito, $puntos_requeridos);
+
+        if ($resultado['success']) {
+            CarritoController::vaciar();
+        }
+
+        return $resultado;
+    }
 }
 
 // Manejo de peticiones AJAX/POST
@@ -99,6 +146,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $resultado = CompraController::procesarCompra();
         
         // Devolver respuesta JSON
+        header('Content-Type: application/json');
+        echo json_encode($resultado);
+        exit();
+    }
+
+    if (isset($_POST['action']) && $_POST['action'] === 'procesar_compra_puntos') {
+        $resultado = CompraController::procesarCompraConPuntos();
+
         header('Content-Type: application/json');
         echo json_encode($resultado);
         exit();

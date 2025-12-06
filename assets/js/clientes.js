@@ -275,17 +275,17 @@ function agregarCliente() {
 
   // Validaciones
   if (!nombre || !email || !password || !password2) {
-    alert("Todos los campos son obligatorios");
+    showNotification({ message: "Todos los campos son obligatorios", type: 'error' });
     return;
   }
 
   if (password !== password2) {
-    alert("Las contraseñas no coinciden");
+    showNotification({ message: "Las contraseñas no coinciden", type: 'error' });
     return;
   }
 
   if (password.length < 6) {
-    alert("La contraseña debe tener al menos 6 caracteres");
+    showNotification({ message: "La contraseña debe tener al menos 6 caracteres", type: 'error' });
     return;
   }
 
@@ -303,10 +303,10 @@ function agregarCliente() {
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        alert("Cliente agregado exitosamente");
-        window.location.href = "ClientesAdmin.php";
+        showNotification({ message: "Cliente agregado exitosamente", type: 'success', autoHide: 1500 });
+        setTimeout(() => { window.location.href = "ClientesAdmin.php"; }, 1400);
       } else {
-        alert("Error: " + data.message);
+        showNotification({ message: "Error: " + data.message, type: 'error' });
       }
     })
     .catch((error) => {
@@ -324,8 +324,8 @@ function cargarDatosCliente() {
   const clienteId = urlParams.get("id");
 
   if (!clienteId) {
-    alert("ID de cliente no válido");
-    window.location.href = "ClientesAdmin.php";
+    showNotification({ message: "ID de cliente no válido", type: 'error' });
+    setTimeout(() => { window.location.href = "ClientesAdmin.php"; }, 1200);
     return;
   }
 
@@ -335,13 +335,13 @@ function cargarDatosCliente() {
       if (data.success) {
         mostrarDatosClienteParaEditar(data);
       } else {
-        alert("Error al cargar datos del cliente");
-        window.location.href = "ClientesAdmin.php";
+        showNotification({ message: "Error al cargar datos del cliente", type: 'error' });
+        setTimeout(() => { window.location.href = "ClientesAdmin.php"; }, 1200);
       }
     })
-    .catch((error) => {
+      .catch((error) => {
       console.error("Error:", error);
-      alert("Error al cargar datos del cliente");
+      showNotification({ message: "Error al cargar datos del cliente", type: 'error' });
     });
 }
 
@@ -376,7 +376,7 @@ function guardarCambios() {
   const email = document.getElementById("editarCorreo").value.trim();
 
   if (!nombre || !email) {
-    alert("El nombre y el correo son obligatorios");
+    showNotification({ message: "El nombre y el correo son obligatorios", type: 'error' });
     return;
   }
 
@@ -393,15 +393,15 @@ function guardarCambios() {
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        alert("Cliente actualizado exitosamente");
-        window.location.href = "ClientesAdmin.php";
+        showNotification({ message: "Cliente actualizado exitosamente", type: 'success', autoHide: 1400 });
+        setTimeout(() => { window.location.href = "ClientesAdmin.php"; }, 1300);
       } else {
-        alert("Error: " + data.message);
+        showNotification({ message: "Error: " + data.message, type: 'error' });
       }
     })
     .catch((error) => {
       console.error("Error:", error);
-      alert("Error al actualizar el cliente");
+      showNotification({ message: "Error al actualizar el cliente", type: 'error' });
     });
 }
 
@@ -409,13 +409,13 @@ function guardarCambios() {
 // ELIMINAR CLIENTE
 // ============================================================================
 function confirmarEliminar(id, nombre) {
-  if (
-    confirm(
-      `¿Está seguro de eliminar al cliente "${nombre}"?\n\nEsta acción también eliminará:\n- Su usuario asociado\n- Todo su historial de compras\n\n¡Esta acción no se puede deshacer!`
-    )
-  ) {
-    eliminarCliente(id);
-  }
+  showNotification({
+    message: `¿Está seguro de eliminar al cliente "${nombre}"?\n\nEsta acción también eliminará:\n- Su usuario asociado\n- Todo su historial de compras\n\n¡Esta acción no se puede deshacer!`,
+    type: 'info',
+    primaryText: 'Eliminar',
+    onPrimary: function(){ eliminarCliente(id); },
+    secondaryText: 'Cancelar'
+  });
 }
 
 function eliminarCliente(id) {
@@ -430,15 +430,15 @@ function eliminarCliente(id) {
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        alert("Cliente eliminado exitosamente");
+        showNotification({ message: "Cliente eliminado exitosamente", type: 'success', autoHide: 1200 });
         cargarClientes(); // Recargar la lista
       } else {
-        alert("Error: " + data.message);
+        showNotification({ message: "Error: " + data.message, type: 'error' });
       }
     })
     .catch((error) => {
       console.error("Error:", error);
-      alert("Error al eliminar el cliente");
+      showNotification({ message: "Error al eliminar el cliente", type: 'error' });
     });
 }
 

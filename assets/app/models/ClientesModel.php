@@ -138,6 +138,48 @@ class ClientesModel {
     }
 
     /**
+     * Crear un cliente a partir de un usuario ya creado
+     * @param int $usuario_id
+     * @param string $nombre
+     * @param string $email
+     * @return array ['success'=>bool,'cliente_id'=>int|'error'=>string]
+     */
+    public function crearClienteDesdeUsuario($usuario_id, $nombre, $email)
+    {
+        try {
+            $this->db->begin_transaction();
+
+            // Obtener el nivel inicial (el de menor puntos)
+            $sqlNivel = "SELECT id FROM niveles ORDER BY puntos_minimos ASC LIMIT 1";
+            $resultNivel = $this->db->query($sqlNivel);
+            $nivel = $resultNivel->fetch_assoc();
+            $nivel_id = $nivel['id'] ?? 1;
+
+            // Insertar cliente
+            $sqlCliente = "INSERT INTO clientes (nombre, email, nivel_id, puntos_acumulados, usuario_id) VALUES (?, ?, ?, 0, ?)";
+            $stmt = $this->db->prepare($sqlCliente);
+            if (!$stmt) {
+                throw new Exception('prepare_failed: ' . $this->db->error);
+            }
+
+            $stmt->bind_param("ssii", $nombre, $email, $nivel_id, $usuario_id);
+            if (!$stmt->execute()) {
+                throw new Exception('execute_failed: ' . $stmt->error);
+            }
+
+            $cliente_id = $this->db->insert_id;
+            $this->db->commit();
+            $stmt->close();
+
+            return ['success' => true, 'cliente_id' => $cliente_id];
+
+        } catch (Exception $e) {
+            $this->db->rollback();
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
      * Actualizar información de un cliente
      */
     public function actualizarCliente($id, $nombre, $email) {

@@ -4,6 +4,10 @@
   padding: 0;
   box-sizing: border-box;
 }
+/* Quitar bordes redondeados en todo el sitio (especificidad alta) */
+*, *::before, *::after {
+  border-radius: 0 !important;
+}
 html,
 body {
   height: 100%;
@@ -1338,15 +1342,53 @@ tbody tr td {
   text-align: center;
 }
 
-.btn-aceptar {
-  background-color: #33ff00;
-  color: #000;
-  padding: 10px 25px;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 10px;
+/* Notification specific styles */
+/* Notification specific styles (updated to match design) */
+.notification-content {
+  max-width: 480px;
+  border-radius: 6px;
+  color: #ffffff;
+  background: #2b3a4a; /* default info/dark */
+  padding: 22px 28px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+  text-align: center;
 }
+
+.notification-content.info { background: #2b3a4a; }
+.notification-content.success { background: #2e7d32; }
+.notification-content.error { background: #c62828; }
+
+.notification-content #globalNotificationMessage {
+  font-size: 16px;
+  line-height: 1.4;
+  margin: 0;
+  padding: 6px 0 12px 0;
+  color: #f1f4f8;
+}
+
+.notification-actions { display:inline-flex; gap:12px; justify-content:center; margin-top:12px; }
+.notification-actions .btn-comprar { padding:10px 22px; border-radius:4px; text-decoration:none; display:inline-block; }
+.notification-actions a.btn-vaciar, .notification-actions button.btn-vaciar { padding:9px 18px; border-radius:4px; background:transparent; border:1px solid rgba(255,255,255,0.18); color:#fff; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
+.notification-actions a.btn-registrar { background: transparent; border: 1px solid rgba(255,255,255,0.18); color: #fff; padding:9px 16px; border-radius:4px; text-decoration:none; }
+
+.btn-aceptar, a.btn-aceptar {
+  background-color: #2fb23f;
+  color: #fff;
+  padding: 10px 24px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 6px;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.btn-aceptar:hover, a.btn-aceptar:hover { filter: brightness(0.95); }
+.notification-actions a.btn-vaciar:hover { background: rgba(255,255,255,0.04); }
+
+/* ensure anchor buttons inherit button-like appearance */
+.notification-actions a { font-weight: 600; }
 /* ======== PERFIL ======== */
 
 .perfil-container {
@@ -2251,37 +2293,46 @@ tbody tr td {
 }
 .carrito-container {
   width: 100%;
-  margin: 40px auto;
-  padding: 0 20px;
+  padding: 40px 0 60px;
+  background: #363d57; /* match site background */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .carrito-title {
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 22px;
   text-align: center;
-  color: #333;
-  margin-bottom: 30px;
-  font-size: 28px;
 }
 
 .carrito-card {
   width: 55%;
-  background: #1F2833;
-  padding: 30px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  background: #1f2833; /* same as other cards */
+  padding: 40px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 260px;
 }
 
 .carrito-empty {
+  color: #d4dbe2;
+  font-size: 16px;
+  margin-bottom: 40px;
   text-align: center;
-  color: #666;
-  font-size: 18px;
-  padding: 40px 0;
 }
 
 .carrito-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 0;
-  border-bottom: 1px solid #eee;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
   gap: 20px;
 }
 
@@ -2289,73 +2340,97 @@ tbody tr td {
   border-bottom: none;
 }
 
-.item-info {
-  flex: 2;
-}
+.item-info { flex: 2; }
 
 .item-nombre {
   font-weight: 600;
-  color: #333;
+  color: #fff;
   font-size: 18px;
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
 .item-cantidad {
-  color: #666;
+  color: #c5c6c7;
   font-size: 14px;
 }
 
 .item-precio {
   flex: 1;
   text-align: right;
+  color: #ffd700; /* price highlight */
+  font-weight: 700;
 }
 
 .item-subtotal {
   display: block;
-  color: #2e7d32;
+  color: #d4dbe2;
   font-weight: 600;
   margin-top: 5px;
   font-size: 16px;
 }
 
-.item-acciones {
-  display: flex;
-  gap: 10px;
-}
+.item-acciones { display: flex; gap: 10px; }
 
 .btn-eliminar {
-  background: #f44336;
+  background: #e74c3c; /* red */
   color: white;
   border: none;
-  padding: 8px 16px;
+  padding: 8px 14px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
-  transition: background 0.3s;
+  transition: background 0.2s;
   text-decoration: none;
   display: inline-block;
 }
 
-.btn-eliminar:hover {
-  background: #d32f2f;
-}
+.btn-eliminar:hover { background: #c83a31; }
 
 .carrito-total {
+  margin-top: auto;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 2px solid #333;
-  font-size: 20px;
+  justify-content: flex-end;
+  gap: 35px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 500;
 }
 
 .carrito-acciones {
   display: flex;
-  justify-content: space-between;
-  margin-top: 30px;
-  gap: 20px;
+  justify-content: flex-end;
+  margin-top: 25px;
+  gap: 12px;
+}
+
+/* Buttons consistent with site */
+.btn-vaciar {
+  background: transparent;
+  border: 2px solid rgba(255,255,255,0.08);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.btn-vaciar:hover { background: rgba(255,255,255,0.03); }
+
+.btn-comprar,
+.btn-pagar-puntos {
+  background: #ffd700;
+  color: #000;
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.btn-comprar:hover,
+.btn-pagar-puntos:hover {
+  background: #e0b800;
 }
 
 .btn-vaciar {

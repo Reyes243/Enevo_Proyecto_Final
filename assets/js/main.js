@@ -271,18 +271,109 @@ document.addEventListener("DOMContentLoaded", function () {
   // ===========================================================
   //          MODAL DE CARRITO (SOLO INDEX.HTML)
   // ===========================================================
-  const btnCarrito = document.querySelector(".btn-carrito");
-  const modal = document.getElementById("modalCarrito");
-  const btnAceptar = document.getElementById("btnAceptar");
+  // GLOBAL NOTIFICATION (inject once)
+  (function insertGlobalNotification(){
+    if (document.getElementById('globalNotification')) return;
 
-  if (btnCarrito && modal && btnAceptar) {
-    btnCarrito.addEventListener("click", (e) => {
+    const modal = document.createElement('div');
+    modal.id = 'globalNotification';
+    modal.className = 'modal oculto';
+    modal.innerHTML = `
+      <div class="modal-content notification-content">
+        <p id="globalNotificationMessage">Mensaje de notificación</p>
+        <div class="notification-actions">
+          <a id="globalPrimaryBtn" class="btn-comprar btn-aceptar" href="#">Aceptar</a>
+          <a id="globalSecondaryBtn" class="btn-vaciar" href="#" style="display:none;">Registrar</a>
+          <button id="globalCloseBtn" class="btn-vaciar">Cerrar</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // close handler
+    document.getElementById('globalCloseBtn').addEventListener('click', function(){
+      document.getElementById('globalNotification').classList.add('oculto');
+    });
+  })();
+
+  // helper to show global notification
+  window.showNotification = function(options){
+    // options: {message, primaryText, primaryHref, onPrimary, type, autoHide}
+    const modal = document.getElementById('globalNotification');
+    const msg = document.getElementById('globalNotificationMessage');
+    const primary = document.getElementById('globalPrimaryBtn');
+
+    msg.textContent = options.message || '';
+
+    const secondary = document.getElementById('globalSecondaryBtn');
+
+    // Primary button
+    if (options.primaryText) {
+      primary.textContent = options.primaryText;
+      if (options.primaryHref) {
+        primary.setAttribute('href', options.primaryHref);
+        primary.onclick = null;
+      } else if (typeof options.onPrimary === 'function') {
+        primary.setAttribute('href', '#');
+        primary.onclick = function(e){ e.preventDefault(); options.onPrimary(); };
+      } else {
+        primary.setAttribute('href', '#');
+        primary.onclick = function(e){ e.preventDefault(); document.getElementById('globalNotification').classList.add('oculto'); };
+      }
+      primary.style.display = '';
+    } else {
+      primary.style.display = 'none';
+    }
+
+    // Secondary button (optional)
+    if (options.secondaryText) {
+      secondary.textContent = options.secondaryText;
+      if (options.secondaryHref) {
+        secondary.setAttribute('href', options.secondaryHref);
+        secondary.onclick = null;
+      } else if (typeof options.onSecondary === 'function') {
+        secondary.setAttribute('href', '#');
+        secondary.onclick = function(e){ e.preventDefault(); options.onSecondary(); };
+      } else {
+        secondary.setAttribute('href', '#');
+        secondary.onclick = function(e){ e.preventDefault(); document.getElementById('globalNotification').classList.add('oculto'); };
+      }
+      secondary.style.display = '';
+    } else {
+      secondary.style.display = 'none';
+    }
+
+    // type styling
+    const content = modal.querySelector('.modal-content');
+    content.classList.remove('info','success','error');
+    if (options.type) content.classList.add(options.type);
+
+    modal.classList.remove('oculto');
+
+    if (options.autoHide) {
+      setTimeout(()=>{ modal.classList.add('oculto'); }, options.autoHide);
+    }
+  };
+
+  // Replace old carrito behavior to use global notification when not logged
+  // Use event delegation so the handler works regardless of where the link is rendered
+  document.body.addEventListener('click', function(e){
+    const target = e.target.closest('.btn-carrito');
+    if (!target) return;
+
+    // if user logged indicator exists in localStorage or session (best-effort)
+    const isLogged = !!localStorage.getItem('usuarioLogeado') || !!sessionStorage.getItem('Usuario');
+    if (!isLogged) {
       e.preventDefault();
-      modal.classList.remove("oculto");
-    });
-
-    btnAceptar.addEventListener("click", () => {
-      modal.classList.add("oculto");
-    });
-  }
+      // compute correct relative path to login depending on current location
+      // prefer root-relative path if site served from document root
+      const loginHref = (location.pathname && location.pathname.split('/').length > 2) ? 'views/login.html' : 'views/login.html';
+      showNotification({
+        message: 'Por favor inicia sesión o regístrate para acceder al carrito.',
+        primaryText: 'Aceptar',
+        type: 'info'
+      });
+    }
+  });
 });

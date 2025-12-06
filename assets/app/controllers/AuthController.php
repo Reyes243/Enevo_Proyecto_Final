@@ -5,6 +5,7 @@ error_reporting(E_ALL);
 
 require_once __DIR__ . '/../config/ConnectionController.php';
 require_once __DIR__ . '/../models/UserModel.php';
+require_once __DIR__ . '/../models/ClientesModel.php';
 
 class AuthController {
     private $conn;
@@ -198,12 +199,28 @@ class AuthController {
             $result = $this->userModel->createUser($nombre, $email, $password);
 
             if ($result['success']) {
-              //  error_log("Usuario creado exitosamente");
-                $baseUrl = $this->getBaseUrl();
-                header("Location: {$baseUrl}/views/login.html?registered=1");
-                exit();
+                // user_id devuelto
+                $user_id = $result['user_id'] ?? null;
+
+                // Crear entrada en clientes ligada al usuario
+                $clientesModel = new ClientesModel($this->conn);
+                $crearCliente = $clientesModel->crearClienteDesdeUsuario($user_id, $nombre, $email);
+
+                if ($crearCliente['success']) {
+                    $baseUrl = $this->getBaseUrl();
+                    header("Location: {$baseUrl}/views/login.html?registered=1");
+                    exit();
+                } else {
+                    // Si falla crear cliente, eliminar usuario creado para evitar inconsistencias
+                    if ($user_id) {
+                        $this->userModel->deleteUserById($user_id);
+                    }
+                    // Redirigir a registro con error
+                    $this->redirect('register', 'database');
+                }
+
             } else {
-              //  error_log("Error al crear usuario: " . $result['error']);
+                //error_log("Error al crear usuario: " . $result['error']);
                 switch ($result['error']) {
                     case 'duplicate':
                         $this->redirect('register', 'duplicate_data');

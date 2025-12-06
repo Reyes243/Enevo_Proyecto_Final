@@ -98,6 +98,8 @@ function agregarEventosDetalles() {
   botones.forEach((btn) => {
     btn.addEventListener("click", function () {
       const juegoId = this.getAttribute("data-juego-id");
+      // Siempre permitir acceder a la página de detalles; la página de detalles
+      // manejará si el usuario está logueado o no (mostrando notificaciones al intentar añadir)
       redirigirADetalles(juegoId);
     });
   });

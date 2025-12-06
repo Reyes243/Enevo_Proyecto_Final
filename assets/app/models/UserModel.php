@@ -8,6 +8,25 @@ class UserModel {
     }
 
     /**
+     * Eliminar usuario por id (util para rollback)
+     */
+    public function deleteUserById($id)
+    {
+        try {
+            $sql = "DELETE FROM {$this->table} WHERE id = ?";
+            $stmt = $this->conn->prepare($sql);
+            if (!$stmt) return false;
+            $stmt->bind_param("i", $id);
+            $res = $stmt->execute();
+            $stmt->close();
+            return $res;
+        } catch (Exception $e) {
+            error_log("Error deleteUserById: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Crea un nuevo usuario
      */
     public function createUser($nombre, $email, $password) {
@@ -50,8 +69,9 @@ class UserModel {
                 ];
             }
 
+            $user_id = $this->conn->insert_id;
             $stmt->close();
-            return ['success' => true, 'error' => null];
+            return ['success' => true, 'user_id' => $user_id, 'error' => null];
             
         } catch (Exception $e) {
             error_log("Error en createUser: " . $e->getMessage());

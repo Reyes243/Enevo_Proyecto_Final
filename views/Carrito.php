@@ -13,6 +13,15 @@ if (!isset($_SESSION['user_id'])) {
 // Incluir la CLASE, no el controlador AJAX
 require_once "../assets/app/controllers/CarritoClass.php";
 
+// Obtener puntos del usuario para mostrar opción de pago con puntos
+require_once __DIR__ . "/../assets/app/config/ConnectionController.php";
+require_once __DIR__ . "/../assets/app/models/PerfilModel.php";
+
+$dbConn = (new ConnectionController())->connect();
+$perfilModel = new PerfilModel($dbConn);
+$perfil = $perfilModel->obtenerPerfil($_SESSION['user_id']);
+$puntosUsuario = $perfil['puntos_acumulados'] ?? 0;
+
 // Manejar acciones GET (eliminar/vaciar)
 if (isset($_GET['eliminar'])) {
     CarritoController::eliminar($_GET['eliminar']);
@@ -75,7 +84,9 @@ $userName = $_SESSION['user_nombre'] ?? "Usuario";
     <main>
         <section class="carrito-container">
 
-            <h2 class="carrito-title">🛒 Tu carrito</h2>
+            <h2 class="carrito-title">Tu carrito</h2>
+
+            <p class="usuario-puntos">Tus puntos: <strong><?php echo intval($puntosUsuario); ?></strong></p>
 
             <div class="carrito-card">
 
@@ -116,6 +127,9 @@ $userName = $_SESSION['user_nombre'] ?? "Usuario";
                         <a class="btn-comprar" href="Checkout.php">
                             Proceder al pago
                         </a>
+                        <button id="btn-pagar-puntos" class="btn-pagar-puntos">
+                            Pagar con puntos
+                        </button>
                     </div>
 
                 <?php } ?>
@@ -133,6 +147,7 @@ $userName = $_SESSION['user_nombre'] ?? "Usuario";
         </div>
     </footer>
 
+    <script src="../assets/js/main.js"></script>
     <script>
         // Logout SIN confirmación - cierra sesión directamente
         document.getElementById('logoutBtn').addEventListener('click', function() {
@@ -176,6 +191,51 @@ $userName = $_SESSION['user_nombre'] ?? "Usuario";
         
         // Actualizar al cargar
         document.addEventListener('DOMContentLoaded', actualizarContadorCarrito);
+
+        // Manejar pago con puntos
+        const btnPagarPuntos = document.getElementById('btn-pagar-puntos');
+        if (btnPagarPuntos) {
+            btnPagarPuntos.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                if (!confirm('¿Deseas pagar esta compra usando tus puntos acumulados?')) return;
+
+                fetch('../assets/app/controllers/CompraController.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'action=procesar_compra_puntos'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showNotification({
+                            message: data.message || 'Compra con puntos realizada',
+                            type: 'success',
+                            autoHide: 2500,
+                            primaryText: 'Ver historial',
+                            primaryHref: 'HistorialCompras.php'
+                        });
+                    } else {
+                        if (data.message === 'Puntos insuficientes') {
+                            showNotification({
+                                message: 'Puntos insuficientes. Necesitas ' + (data.puntos_requeridos || 'N/A') + ' puntos. Tienes: ' + (data.puntos_actuales || 0),
+                                type: 'error',
+                                primaryText: 'Ver perfil',
+                                primaryHref: 'Perfil.php'
+                            });
+                        } else {
+                            showNotification({ message: data.message || 'Error al procesar la compra', type: 'error' });
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    showNotification({ message: 'Error en la petición. Intenta nuevamente.', type: 'error' });
+                });
+            });
+        }
     </script>
 
 </body>

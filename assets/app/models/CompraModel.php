@@ -117,6 +117,38 @@ class CompraModel
     }
 
     /**
+     * Obtener puntos acumulados del cliente
+     * @param int $cliente_id
+     * @return int|null
+     */
+    public function obtenerPuntosCliente($cliente_id)
+    {
+        $sql = "SELECT puntos_acumulados FROM clientes WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $cliente_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($row = $result->fetch_assoc()) {
+            return (int)$row['puntos_acumulados'];
+        }
+        return null;
+    }
+
+    /**
+     * Descontar puntos del cliente (usar cuando se compra con puntos)
+     * @param int $cliente_id
+     * @param int $puntos
+     * @return bool
+     */
+    public function descontarPuntos($cliente_id, $puntos)
+    {
+        $sql = "UPDATE clientes SET puntos_acumulados = puntos_acumulados - ? WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ii", $puntos, $cliente_id);
+        return $stmt->execute();
+    }
+
+    /**
      * Obtiene el nombre del nivel actual del cliente
      * @param int $cliente_id ID del cliente
      * @return string|null Nombre del nivel o null
@@ -259,6 +291,61 @@ class CompraModel
             return [
                 'success' => false,
                 'message' => 'Error al procesar la compra: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    /**
+     * Procesar compra usando puntos del cliente
+     * @param int $user_id
+     * @param array $carrito
+     * @param int $puntos_requeridos
+     * @return array
+     */
+    public function procesarCompraCarritoConPuntos($user_id, $carrito, $puntos_requeridos)
+    {
+        // Iniciar transacción
+        $this->conn->begin_transaction();
+
+        try {
+            $cliente_id = $this->obtenerClienteId($user_id);
+            if (!$cliente_id) {
+                throw new Exception("Cliente no encontrado");
+            }
+
+            // Registrar cada item como compra con monto 0 y puntos_generados 0
+            foreach ($carrito as $juego_id => $item) {
+                $monto_item = 0;
+                $puntos_item = 0;
+
+                $this->registrarCompra(
+                    $cliente_id,
+                    $juego_id,
+                    $item['cantidad'],
+                    $monto_item,
+                    $puntos_item
+                );
+            }
+
+            // Descontar puntos del cliente
+            $this->descontarPuntos($cliente_id, $puntos_requeridos);
+
+            // Actualizar nivel del cliente
+            $this->actualizarNivel($cliente_id);
+
+            $this->conn->commit();
+
+            return [
+                'success' => true,
+                'message' => 'Compra realizada con puntos exitosamente',
+                'puntos_usados' => $puntos_requeridos
+            ];
+
+        } catch (Exception $e) {
+            $this->conn->rollback();
+            return [
+                'success' => false,
+                'message' => 'Error al procesar la compra con puntos: ' . $e->getMessage()
             ];
         }
     }

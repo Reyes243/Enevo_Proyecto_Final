@@ -116,6 +116,7 @@ $historial = $compraModel->obtenerHistorialCompras($_SESSION['user_id']);
     </footer>
 
     <!-- Scripts -->
+    <script src="../assets/js/main.js"></script>
     <script>
         // Logout
         document.getElementById('logoutBtn').addEventListener('click', function() {
@@ -124,7 +125,7 @@ $historial = $compraModel->obtenerHistorialCompras($_SESSION['user_id']);
 
         // Función para descargar PDF (placeholder)
         function descargarPDF() {
-            alert('Función de descarga de PDF en desarrollo');
+            showNotification({ message: 'Función de descarga de PDF en desarrollo', type: 'info', autoHide: 2500 });
             // Aquí puedes implementar la generación de PDF más adelante
         }
     </script>

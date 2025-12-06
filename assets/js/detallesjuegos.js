@@ -14,6 +14,24 @@ window.addEventListener("DOMContentLoaded", function () {
         !window.location.pathname.includes("Admin")) {
         actualizarContadorCarrito();
     }
+
+    // Interceptar clicks al carrito dentro de la página de detalles cuando NO está logueado
+    // Esto cubre el caso donde el header/carrito está presente en la página de detalles
+    const isLoggedQuick = !!localStorage.getItem('usuarioLogeado') || !!sessionStorage.getItem('Usuario');
+    const loginHrefQuick = window.location.pathname.includes('/views/') ? 'login.html' : 'views/login.html';
+    if (!isLoggedQuick) {
+        document.body.addEventListener('click', function(e){
+            const clicked = e.target.closest('.btn-carrito, a[href*="carrito"], a[href*="Carrito"], .add-to-cart');
+            if (!clicked) return;
+            e.preventDefault();
+            showNotification({
+                message: 'Debes iniciar sesión para acceder al carrito.',
+                primaryText: 'Aceptar',
+                primaryHref: loginHrefQuick,
+                type: 'info'
+            });
+        });
+    }
 });
 
 async function cargarDetalleJuego() {
@@ -104,15 +122,39 @@ function activarCarrito(juego) {
     const isNoLogin = window.location.pathname.includes("NoLogin");
     const isAdmin = window.location.pathname.includes("Admin");
 
-    // NO LOGIN: mostrar mensaje
-    if (isNoLogin) {
-        const btn = document.querySelector(".btn-buy");
+    // Mejor esfuerzo: comprobar si el usuario está logueado
+    const isLogged = !!localStorage.getItem('usuarioLogeado') || !!sessionStorage.getItem('Usuario');
+
+    if (!isLogged) {
+        // Si no está logueado, interceptar el botón de 'añadir al carrito' y los enlaces al carrito
+        let btn = document.getElementById("addCartBtn") || document.querySelector(".btn-buy") || document.querySelector("button[class*='cart'], button[class*='buy']");
         if (btn) {
-            btn.addEventListener("click", () => {
-                alert("Debes iniciar sesión para agregar al carrito.");
-                window.location.href = "login.html";
+            btn.addEventListener("click", function(e){
+                e.preventDefault();
+                const loginHref = window.location.pathname.includes('/views/') ? 'login.html' : 'views/login.html';
+                showNotification({
+                    message: 'Debes iniciar sesión para agregar al carrito.',
+                    primaryText: 'Aceptar',
+                    primaryHref: loginHref,
+                    type: 'info'
+                });
             });
         }
+
+        const carritoBtns = document.querySelectorAll('.btn-carrito, a[href*="carrito"], .add-to-cart');
+        carritoBtns.forEach(cb => {
+            cb.addEventListener('click', function(e){
+                e.preventDefault();
+                const loginHref = window.location.pathname.includes('/views/') ? 'login.html' : 'views/login.html';
+                showNotification({
+                    message: 'Debes iniciar sesión para acceder al carrito.',
+                    primaryText: 'Aceptar',
+                    primaryHref: loginHref,
+                    type: 'info'
+                });
+            });
+        });
+
         return;
     }
 
@@ -207,7 +249,13 @@ function activarCarrito(juego) {
                 btn.style.color = "white";
                 
                 // Mensaje al usuario
-                alert("✅ " + (data.message || "¡Juego agregado al carrito exitosamente!"));
+                showNotification({
+                    message: (data.message || "¡Juego agregado al carrito exitosamente!"),
+                    type: 'success',
+                    autoHide: 2500,
+                    primaryText: 'Ver carrito',
+                    primaryHref: 'Carrito.php'
+                });
                 
                 // Actualizar contador del carrito
                 actualizarContadorCarrito();
@@ -229,7 +277,7 @@ function activarCarrito(juego) {
                 btn.style.backgroundColor = "#f44336";
                 btn.style.color = "white";
                 
-                alert("❌ " + (data.message || "No se pudo agregar al carrito. Intenta nuevamente."));
+                showNotification({ message: (data.message || "No se pudo agregar al carrito. Intenta nuevamente."), type: 'error' });
             }
             
         } catch (error) {
@@ -240,7 +288,7 @@ function activarCarrito(juego) {
             btn.style.backgroundColor = "#FF9800";
             btn.style.color = "white";
             
-            alert("⚠️ Error de conexión: " + error.message + "\n\nEl producto podría haberse agregado. Verifica tu carrito.");
+            showNotification({ message: "Error de conexión: " + error.message + "\n\nEl producto podría haberse agregado. Verifica tu carrito.", type: 'error' });
             
         } finally {
             // Restaurar botón después de 1.5 segundos
