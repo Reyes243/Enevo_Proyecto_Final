@@ -20,7 +20,7 @@ async function cargarJuegos() {
       ? "assets/app/controllers/JuegoController.php?action=getAll"
       : "../assets/app/controllers/JuegoController.php?action=getAll";
 
-    console.log("📍 Ruta del fetch:", rutaController);
+    console.log(" Ruta del fetch:", rutaController);
 
     const response = await fetch(rutaController);
     const data = await response.json();

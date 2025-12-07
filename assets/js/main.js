@@ -344,7 +344,7 @@ document.addEventListener("DOMContentLoaded", function () {
       secondary.style.display = 'none';
     }
 
-    // type styling
+
     const content = modal.querySelector('.modal-content');
     content.classList.remove('info','success','error');
     if (options.type) content.classList.add(options.type);
@@ -356,18 +356,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
-  // Replace old carrito behavior to use global notification when not logged
-  // Use event delegation so the handler works regardless of where the link is rendered
+
   document.body.addEventListener('click', function(e){
     const target = e.target.closest('.btn-carrito');
     if (!target) return;
 
-    // if user logged indicator exists in localStorage or session (best-effort)
+
     const isLogged = !!localStorage.getItem('usuarioLogeado') || !!sessionStorage.getItem('Usuario');
     if (!isLogged) {
       e.preventDefault();
-      // compute correct relative path to login depending on current location
-      // prefer root-relative path if site served from document root
       const loginHref = (location.pathname && location.pathname.split('/').length > 2) ? 'views/login.html' : 'views/login.html';
       showNotification({
         message: 'Por favor inicia sesión o regístrate para acceder al carrito.',

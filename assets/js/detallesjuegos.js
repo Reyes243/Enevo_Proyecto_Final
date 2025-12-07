@@ -174,15 +174,15 @@ function activarCarrito(juego) {
     }
     
     if (!btn) {
-        console.error("❌ No se encontró el botón para agregar al carrito");
+        console.error(" No se encontró el botón para agregar al carrito");
         return;
     }
 
-    console.log("🔘 Botón encontrado:", btn);
+    console.log(" Botón encontrado:", btn);
     
     // AGREGAR EVENT LISTENER
     btn.addEventListener("click", async function() {
-        console.log("🟢 Botón clickeado, ID del juego:", juego.id);
+        console.log(" Botón clickeado, ID del juego:", juego.id);
         
         // Guardar estado original
         const originalText = btn.textContent;
@@ -190,7 +190,7 @@ function activarCarrito(juego) {
         
         // Deshabilitar y cambiar apariencia temporalmente
         btn.disabled = true;
-        btn.textContent = "🔄 Agregando...";
+        btn.textContent = " Agregando...";
         btn.style.opacity = "0.8";
         btn.style.cursor = "wait";
         
@@ -199,7 +199,7 @@ function activarCarrito(juego) {
             const formData = new FormData();
             formData.append("id_juego", juego.id);
             
-            console.log("📤 Enviando datos al servidor...");
+            console.log(" Enviando datos al servidor...");
             
             // Hacer petición al controlador CORREGIDO
             const response = await fetch("../assets/app/controllers/CarritoController.php?action=add", {
@@ -209,20 +209,20 @@ function activarCarrito(juego) {
             
             // Verificar si la respuesta es válida
             const responseText = await response.text();
-            console.log("📄 Respuesta en texto plano:", responseText);
+            console.log(" Respuesta en texto plano:", responseText);
             
             let data;
             try {
                 data = JSON.parse(responseText);
-                console.log("📥 JSON parseado correctamente:", data);
+                console.log(" JSON parseado correctamente:", data);
             } catch (jsonError) {
-                console.error("❌ Error parseando JSON:", jsonError);
-                console.log("📝 Respuesta cruda (primeros 500 chars):", responseText.substring(0, 500));
+                console.error(" Error parseando JSON:", jsonError);
+                console.log(" Respuesta cruda (primeros 500 chars):", responseText.substring(0, 500));
                 
                 // Si hay error de JSON pero la petición fue exitosa (código 200)
                 if (response.ok) {
                     // Forzar éxito (modo de respaldo)
-                    data = { success: true, message: "Producto agregado (modo respaldo)" };
+                    data = { success: true, message: "¡Juego agregado al carrito!" };
                     
                     // Intentar agregar al carrito de todos modos
                     if (!sessionStorage.getItem('carrito_local')) {
@@ -244,8 +244,8 @@ function activarCarrito(juego) {
             // MOSTRAR RESULTADO
             if (data.success) {
                 // ÉXITO
-                btn.textContent = "✅ ¡Agregado!";
-                btn.style.backgroundColor = "#4CAF50";
+                btn.textContent = " ¡Agregado!";
+                btn.style.backgroundColor = "#269b26ff";
                 btn.style.color = "white";
                 
                 // Mensaje al usuario
@@ -265,15 +265,15 @@ function activarCarrito(juego) {
                     try {
                         const carritoResp = await fetch("../assets/app/controllers/CarritoController.php?action=get");
                         const carritoData = await carritoResp.json();
-                        console.log("🛍️ Carrito actual:", carritoData);
+                        console.log(" Carrito actual:", carritoData);
                     } catch (e) {
-                        console.log("ℹ️ No se pudo verificar carrito:", e.message);
+                        console.log("No se pudo verificar carrito:", e.message);
                     }
                 }, 500);
                 
             } else {
                 // ERROR del servidor
-                btn.textContent = "❌ Error";
+                btn.textContent = " Error";
                 btn.style.backgroundColor = "#f44336";
                 btn.style.color = "white";
                 
@@ -282,9 +282,9 @@ function activarCarrito(juego) {
             
         } catch (error) {
             // ERROR de conexión o procesamiento
-            console.error("❌ Error en la petición:", error);
+            console.error(" Error en la petición:", error);
             
-            btn.textContent = "⚠️ Error conexión";
+            btn.textContent = " Error conexión";
             btn.style.backgroundColor = "#FF9800";
             btn.style.color = "white";
             
@@ -298,7 +298,7 @@ function activarCarrito(juego) {
                 btn.style.backgroundColor = originalBg;
                 btn.style.opacity = "1";
                 btn.style.cursor = "pointer";
-                btn.style.color = ""; // Restaurar color original
+                btn.style.color = ""; 
             }, 1500);
         }
     });
@@ -310,7 +310,7 @@ function activarCarrito(juego) {
 
 async function actualizarContadorCarrito() {
     try {
-        console.log("🔄 Actualizando contador del carrito...");
+        console.log(" Actualizando contador del carrito...");
         
         const response = await fetch("../assets/app/controllers/CarritoController.php?action=get");
         
@@ -321,8 +321,8 @@ async function actualizarContadorCarrito() {
         try {
             data = JSON.parse(responseText);
         } catch (e) {
-            console.error("❌ Error parseando respuesta del carrito:", e);
-            console.log("📄 Respuesta recibida:", responseText.substring(0, 200));
+            console.error(" Error parseando respuesta del carrito:", e);
+            console.log(" Respuesta recibida:", responseText.substring(0, 200));
             return;
         }
         
@@ -337,7 +337,7 @@ async function actualizarContadorCarrito() {
                 totalItems = data.total_items;
             }
             
-            console.log("📊 Total items en carrito:", totalItems);
+            console.log(" Total items en carrito:", totalItems);
             
             // Buscar o crear contador
             let contador = document.getElementById("cart-count");
@@ -388,11 +388,11 @@ async function actualizarContadorCarrito() {
             }
             
         } else {
-            console.error("❌ Error en respuesta del carrito:", data.message);
+            console.error(" Error en respuesta del carrito:", data.message);
         }
         
     } catch (error) {
-        console.error("❌ Error actualizando contador:", error);
+        console.error(" Error actualizando contador:", error);
         
         // Intentar usar localStorage como respaldo
         const ultimoContador = localStorage.getItem('ultimo_contador_carrito');
@@ -434,8 +434,8 @@ function mostrarNotificacion(mensaje, tipo = "success") {
     
     // Color según tipo
     if (tipo === "success") {
-        notificacion.style.backgroundColor = "#4CAF50";
-        notificacion.style.borderLeft = "5px solid #2E7D32";
+        notificacion.style.backgroundColor = "#414141ff";
+        notificacion.style.borderLeft = "5px solid #7a7a7aff";
     } else if (tipo === "error") {
         notificacion.style.backgroundColor = "#f44336";
         notificacion.style.borderLeft = "5px solid #c62828";
@@ -458,7 +458,7 @@ function mostrarError(mensaje) {
     if (main) {
         main.innerHTML = `
             <div style="text-align: center; padding: 40px;">
-                <h2 style="color: #f44;">❌ ${mensaje}</h2>
+                <h2 style="color: #f44;"> ${mensaje}</h2>
                 <p>
                     <a href="../index.html" style="color: #00a8e8;">← Volver a la tienda</a>
                 </p>
@@ -515,12 +515,12 @@ document.head.appendChild(style);
 
 // Función para verificar estado del carrito al cargar
 function verificarEstadoInicialCarrito() {
-    console.log("🔍 Verificando estado inicial del carrito...");
+    console.log(" Verificando estado inicial del carrito...");
     
     // Verificar si hay carrito en localStorage (respaldo)
     const carritoLocal = sessionStorage.getItem('carrito_local');
     if (carritoLocal) {
-        console.log("📦 Carrito local encontrado:", JSON.parse(carritoLocal));
+        console.log(" Carrito local encontrado:", JSON.parse(carritoLocal));
     }
     
     // Intentar cargar del servidor
