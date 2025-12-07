@@ -103,7 +103,7 @@ $compras_faltantes = $datosPerfil['compras_faltantes'];
 
                     <div class="perfil-buttons">
                         <a href="HistorialCompras.php" class="btn-perfil">Ver Historial de Compras</a>
-                        <a href="../ExportarDatos.php?formato=pdf" class="btn-perfil">Descargar PDF</a>
+                        <a href="../ExportarDatos.php?tipo=perfil&formato=pdf" class="btn-perfil">Descargar PDF</a>
                     </div>
 
                     <div class="info-adicional">

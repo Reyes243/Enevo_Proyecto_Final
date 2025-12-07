@@ -6,7 +6,7 @@ class ConnectionController{
 	private $USER = "root";
 	private $PASS = "";
 	private $DBNM = "enevo";
-	private $PORT = 3306;  
+	private $PORT = 3308;  
 
 	function connect()
 	{
