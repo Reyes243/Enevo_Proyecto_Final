@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// RUTAS CORREGIDAS - todos los archivos están en assets/app/
 require_once __DIR__ . '/../assets/app/config/ConnectionController.php';
 require_once __DIR__ . '/../assets/app/controllers/PerfilController.php';
 
@@ -15,7 +14,6 @@ if ($_SESSION['user_rol'] === 'admin') {
     exit();
 }
 
-// Crear la conexión usando tu ConnectionController
 $connection = new ConnectionController();
 $conn = $connection->connect();
 
@@ -26,7 +24,6 @@ if (!$conn) {
 $controller = new PerfilController($conn);
 $userName = $_SESSION['user_nombre'] ?? 'Usuario';
 
-// Cargar datos del perfil
 $datosPerfil = $controller->mostrarPerfil($_SESSION['user_id']);
 $perfil = $datosPerfil['perfil'];
 $proximo_nivel = $datosPerfil['proximo_nivel'];

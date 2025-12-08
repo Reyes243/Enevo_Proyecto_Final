@@ -123,10 +123,8 @@ $historial = $compraModel->obtenerHistorialCompras($_SESSION['user_id']);
             window.location.href = '../assets/app/controllers/LogoutController.php';
         });
 
-        // Función para descargar PDF (placeholder)
         function descargarPDF() {
             showNotification({ message: 'Función de descarga de PDF en desarrollo', type: 'info', autoHide: 2500 });
-            // Aquí puedes implementar la generación de PDF más adelante
         }
     </script>
 </body>
