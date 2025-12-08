@@ -1,6 +1,5 @@
 <?php
-// assets/app/controllers/CarritoClass.php
-// SOLO LA CLASE - Para uso en PHP tradicional
+
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();

@@ -7,9 +7,9 @@ class NivelModel {
         $this->conn = $conn;
     }
 
-    /**
-     * Obtiene todos los niveles ordenados por puntos mínimos
-     */
+    
+     //Obtiene todos los niveles ordenados por puntos mínimos
+     
     public function getAllNiveles() {
         try {
             $sql = "SELECT id, nombre, puntos_minimos, compras_necesarias, beneficios FROM {$this->table} ORDER BY puntos_minimos ASC";
@@ -33,9 +33,9 @@ class NivelModel {
         }
     }
 
-    /**
-     * Obtiene un nivel por ID
-     */
+    
+     //Obtiene un nivel por ID
+    
     public function getNivelById($id) {
         try {
             $sql = "SELECT id, nombre, puntos_minimos, compras_necesarias, beneficios FROM {$this->table} WHERE id = ? LIMIT 1";
@@ -66,9 +66,9 @@ class NivelModel {
         }
     }
 
-    /**
-     * Crea un nuevo nivel
-     */
+    
+     //Crea un nuevo nivel
+     
     public function createNivel($nombre, $puntos_minimos, $compras_necesarias, $beneficios) {
         try {
             $sql = "INSERT INTO {$this->table} (nombre, puntos_minimos, compras_necesarias, beneficios) VALUES (?, ?, ?, ?)";
@@ -122,9 +122,9 @@ class NivelModel {
         }
     }
 
-    /**
-     * Actualiza un nivel existente
-     */
+    
+     // Actualiza un nivel existente
+     
     public function updateNivel($id, $nombre, $puntos_minimos, $compras_necesarias, $beneficios) {
         try {
             $sql = "UPDATE {$this->table} SET nombre = ?, puntos_minimos = ?, compras_necesarias = ?, beneficios = ? WHERE id = ?";
@@ -170,12 +170,11 @@ class NivelModel {
         }
     }
 
-    /**
-     * Elimina un nivel
-     */
+    
+     //Elimina un nivel
+     
     public function deleteNivel($id) {
         try {
-            // Primero verificar si hay clientes asociados a este nivel
             $sqlCheck = "SELECT COUNT(*) as count FROM clientes WHERE nivel_id = ?";
             $stmtCheck = $this->conn->prepare($sqlCheck);
             
@@ -200,7 +199,6 @@ class NivelModel {
                 ];
             }
             
-            // Si no hay clientes, proceder a eliminar
             $sql = "DELETE FROM {$this->table} WHERE id = ?";
             $stmt = $this->conn->prepare($sql);
             
@@ -250,9 +248,9 @@ class NivelModel {
         }
     }
 
-    /**
-     * Verifica si existe un nombre de nivel
-     */
+    
+     // Verifica si existe un nombre de nivel
+     
     public function nombreExists($nombre, $excludeId = null) {
         try {
             if ($excludeId) {
@@ -283,9 +281,9 @@ class NivelModel {
         }
     }
 
-    /**
-     * Obtiene los clientes asociados a un nivel específico
-     */
+    
+     //Obtiene los clientes asociados a un nivel específico
+    
     public function getClientesByNivel($nivelId) {
     try {
         $sql = "SELECT id, nombre, email 

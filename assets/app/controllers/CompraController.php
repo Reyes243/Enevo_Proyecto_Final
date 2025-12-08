@@ -1,5 +1,4 @@
 <?php
-// assets/app/controllers/CompraController.php
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -10,13 +9,11 @@ require_once __DIR__ . '/CarritoClass.php';
 
 class CompraController
 {
-    /**
-     * Procesa la compra del carrito actual
-     * @return array Resultado con 'success', 'message' y datos adicionales
-     */
+    
+     // Procesa la compra del carrito actual
+    
     public static function procesarCompra()
     {
-        // Verificar que el usuario esté autenticado
         if (!isset($_SESSION['user_id'])) {
             return [
                 'success' => false,
@@ -24,10 +21,8 @@ class CompraController
             ];
         }
 
-        // Obtener el carrito
         $carrito = CarritoController::obtenerCarrito();
 
-        // Verificar que el carrito no esté vacío
         if (empty($carrito)) {
             return [
                 'success' => false,
@@ -35,10 +30,8 @@ class CompraController
             ];
         }
 
-        // Calcular el total
         $total = CarritoController::total();
 
-        // Procesar la compra usando el modelo
         $model = new CompraModel();
         $resultado = $model->procesarCompraCarrito(
             $_SESSION['user_id'],
@@ -46,7 +39,6 @@ class CompraController
             $total
         );
 
-        // Si la compra fue exitosa, vaciar el carrito
         if ($resultado['success']) {
             CarritoController::vaciar();
         }
@@ -54,10 +46,9 @@ class CompraController
         return $resultado;
     }
 
-    /**
-     * Obtiene los datos necesarios para mostrar en el checkout
-     * @return array|null Datos del carrito y totales
-     */
+    
+     // Obtiene los datos necesarios para mostrar en el checkout
+     
     public static function obtenerDatosCheckout()
     {
         if (!isset($_SESSION['user_id'])) {
@@ -81,20 +72,17 @@ class CompraController
         ];
     }
 
-    /**
-     * Calcula cuántos puntos se generarán por un monto
-     * @param float $monto Monto de la compra
-     * @return int Puntos que se generarán
-     */
+    
+    // Calcula cuántos puntos se generarán por un monto
+    
     public static function calcularPuntos($monto)
     {
         return floor($monto / 10);
     }
 
-    /**
-     * Procesar la compra usando puntos acumulados del cliente
-     * @return array
-     */
+    
+     //Procesar la compra usando puntos acumulados del cliente
+     
     public static function procesarCompraConPuntos()
     {
         if (!isset($_SESSION['user_id'])) {
@@ -106,7 +94,6 @@ class CompraController
             return ['success' => false, 'message' => 'El carrito está vacío'];
         }
 
-        // Calcular puntos requeridos por el carrito (misma regla que en frontend)
         $puntos_requeridos = 0;
         foreach ($carrito as $item) {
             $puntos_unit = floor($item['precio'] / 50);
@@ -128,7 +115,6 @@ class CompraController
             return ['success' => false, 'message' => 'Puntos insuficientes', 'puntos_actuales' => $puntos_actuales, 'puntos_requeridos' => $puntos_requeridos];
         }
 
-        // Procesar compra con puntos usando el modelo
         $resultado = $model->procesarCompraCarritoConPuntos($_SESSION['user_id'], $carrito, $puntos_requeridos);
 
         if ($resultado['success']) {
@@ -160,7 +146,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Manejo de peticiones GET para obtener datos del checkout
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
     if (isset($_GET['action']) && $_GET['action'] === 'datos_checkout') {

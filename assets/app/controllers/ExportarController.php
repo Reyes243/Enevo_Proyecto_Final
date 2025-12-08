@@ -9,12 +9,10 @@ class ExportarController {
     }
 
     public function exportarDatosUsuario($usuario_id, $formato = 'json') {
-        // Usar el modelo existente para obtener datos
         $model = new PerfilModel($this->db);
         $perfil = $model->obtenerPerfil($usuario_id);
 
         if (!$perfil) {
-            // Si no hay perfil, obtener datos básicos del usuario
             $sql = "SELECT u.*, 'Bronce' as nivel_nombre, 0 as puntos_acumulados, 
                     0 as total_compras, 0 as total_gastado
                     FROM usuarios u 
@@ -31,7 +29,6 @@ class ExportarController {
             exit();
         }
 
-        // Preparar datos para exportación (solo información básica)
         $datosExportar = [
             'informacion_personal' => [
                 'nombre' => $perfil['nombre'] ?? $perfil['username'] ?? '',
@@ -47,7 +44,6 @@ class ExportarController {
             'fecha_exportacion' => date('Y-m-d H:i:s')
         ];
 
-        // Exportar según el formato solicitado
         if ($formato === 'pdf') {
             $this->generarPDF($datosExportar);
         } else {
@@ -55,9 +51,7 @@ class ExportarController {
         }
     }
 
-    // NUEVO MÉTODO PARA EXPORTAR HISTORIAL DE COMPRAS
     public function exportarHistorialCompras($usuario_id) {
-        // Obtener información del usuario
         $sqlUsuario = "SELECT nombre, email FROM usuarios WHERE id = ?";
         $stmtUsuario = $this->db->prepare($sqlUsuario);
         $stmtUsuario->bind_param("i", $usuario_id);
@@ -70,7 +64,6 @@ class ExportarController {
             exit();
         }
 
-        // Obtener historial de compras
         $sqlCompras = "SELECT 
                 c.id as compra_id,
                 c.fecha_compra,
@@ -88,7 +81,6 @@ class ExportarController {
         $stmtCompras->execute();
         $compras = $stmtCompras->get_result()->fetch_all(MYSQLI_ASSOC);
 
-        // Calcular totales
         $totalGastado = 0;
         $totalPuntos = 0;
         foreach ($compras as $compra) {
@@ -110,7 +102,6 @@ class ExportarController {
             'fecha_exportacion' => date('Y-m-d H:i:s')
         ];
 
-        // Generar PDF del historial
         $this->generarPDFHistorial($datosExportar);
     }
 
@@ -122,13 +113,10 @@ class ExportarController {
     }
 
     private function generarPDF($datos) {
-        // Generar contenido HTML optimizado para imprimir como PDF
         $html = $this->generarHTMLParaPDF($datos);
         
-        // Configurar headers para HTML
         header('Content-Type: text/html; charset=utf-8');
         
-        // Mostrar HTML con script de impresión automática
         echo $html;
         echo '<script>
             window.onload = function() {
@@ -139,13 +127,10 @@ class ExportarController {
     }
 
     private function generarPDFHistorial($datos) {
-        // Generar contenido HTML del historial
         $html = $this->generarHTMLHistorial($datos);
         
-        // Configurar headers para HTML
         header('Content-Type: text/html; charset=utf-8');
         
-        // Mostrar HTML con script de impresión automática
         echo $html;
         echo '<script>
             window.onload = function() {
@@ -309,16 +294,15 @@ class ExportarController {
             <p class="subtitle" style="margin-top: 10px; font-size: 14px;">Exportado el: ' . $fechaExportacion . '</p>
         </div>
 
-        <!-- INFORMACIÓN PERSONAL -->
         <div class="section">
-            <div class="section-title">Información Personal</div>
+            <div class="section-title">Informacion Personal</div>
             <div class="info-grid">
                 <div class="info-row">
                     <span class="info-label">Nombre:</span>
                     <span class="info-value">' . $nombre . '</span>
                 </div>
                 <div class="info-row">
-                    <span class="info-label">Correo Electrónico:</span>
+                    <span class="info-label">Correo Electronico:</span>
                     <span class="info-value">' . $email . '</span>
                 </div>
                 <div class="info-row">
@@ -328,7 +312,6 @@ class ExportarController {
             </div>
         </div>
 
-        <!-- NIVEL Y PUNTOS -->
         <div class="section">
             <div class="section-title">Nivel y Puntos</div>
             <div class="info-grid">
@@ -348,9 +331,9 @@ class ExportarController {
         </div>
 
         <div class="footer">
-            <p><strong>ENEVO</strong> - Sistema de Gestión de Clientes</p>
-            <p style="margin-top: 8px;">© 2025 – Todos los derechos reservados</p>
-            <p style="margin-top: 8px; font-size: 12px;">Este documento contiene información confidencial</p>
+            <p><strong>ENEVO</strong> - Sistema de Gestion de Clientes</p>
+            <p style="margin-top: 8px;">2025 - Todos los derechos reservados</p>
+            <p style="margin-top: 8px; font-size: 12px;">Este documento contiene informacion confidencial</p>
         </div>
         
     </div>
@@ -369,7 +352,6 @@ class ExportarController {
         $totalGastado = number_format($datos['resumen']['total_gastado'], 2);
         $totalPuntos = $datos['resumen']['total_puntos'];
 
-        // Generar filas de la tabla
         $filasCompras = '';
         if (empty($datos['compras'])) {
             $filasCompras = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: #c5c6c7;">No hay compras registradas</td></tr>';
@@ -616,8 +598,8 @@ class ExportarController {
         </div>
 
         <div class="footer">
-            <p><strong>ENEVO</strong> - Sistema de Gestión de Clientes</p>
-            <p style="margin-top: 8px;">© 2025 – Todos los derechos reservados</p>
+            <p><strong>ENEVO</strong> - Sistema de Gestion de Clientes</p>
+            <p style="margin-top: 8px;">2025 - Todos los derechos reservados</p>
         </div>
         
     </div>

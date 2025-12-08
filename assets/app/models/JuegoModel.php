@@ -7,9 +7,9 @@ class JuegoModel {
         $this->conn = $conn;
     }
 
-    /**
-     * Obtiene todos los juegos ordenados por fecha de creación
-     */
+    
+     //Obtiene todos los juegos ordenados por fecha de creación
+     
     public function getAllJuegos() {
         try {
             $sql = "SELECT id, nombre, descripcion, precio, genero, plataforma, fecha_creacion 

@@ -40,17 +40,14 @@ class PerfilModel {
 
     // Actualizar perfil del usuario
     public function actualizarPerfil($usuario_id, $nombre, $email) {
-        // Actualizar en la tabla usuarios
         $sql_usuario = "UPDATE usuarios SET username = ?, email = ? WHERE id = ?";
         $stmt_usuario = $this->db->prepare($sql_usuario);
         $stmt_usuario->bind_param("ssi", $nombre, $email, $usuario_id);
         
-        // Actualizar en la tabla clientes
         $sql_cliente = "UPDATE clientes SET nombre = ? WHERE usuario_id = ?";
         $stmt_cliente = $this->db->prepare($sql_cliente);
         $stmt_cliente->bind_param("si", $nombre, $usuario_id);
         
-        // Ejecutar ambas actualizaciones
         $result_usuario = $stmt_usuario->execute();
         $result_cliente = $stmt_cliente->execute();
         

@@ -1,8 +1,4 @@
 <?php
-/**
- * ClientesModel.php
- * Modelo para manejar operaciones de clientes en la base de datos
- */
 
 class ClientesModel {
     private $db;
@@ -11,9 +7,8 @@ class ClientesModel {
         $this->db = $database;
     }
 
-    /**
-     * Obtener todos los clientes con su información de nivel
-     */
+    //Obtener todos los clientes con su información de nivel
+
     public function obtenerTodosLosClientes() {
         $sql = "SELECT c.id, c.nombre, c.email, c.puntos_acumulados, 
                        c.fecha_registro, c.usuario_id,
@@ -82,10 +77,8 @@ class ClientesModel {
      */
     public function crearCliente($nombre, $email, $password) {
         try {
-            // Iniciar transacción
             $this->db->begin_transaction();
 
-            // 1. Crear usuario primero
             $password_hash = password_hash($password, PASSWORD_DEFAULT);
             $rol = 'cliente';
             
@@ -100,13 +93,11 @@ class ClientesModel {
             
             $usuario_id = $this->db->insert_id;
 
-            // 2. Obtener el nivel inicial (Bronce - el de menor puntos)
             $sqlNivel = "SELECT id FROM niveles ORDER BY puntos_minimos ASC LIMIT 1";
             $resultNivel = $this->db->query($sqlNivel);
             $nivel = $resultNivel->fetch_assoc();
             $nivel_id = $nivel['id'];
 
-            // 3. Crear cliente vinculado al usuario
             $sqlCliente = "INSERT INTO clientes (nombre, email, nivel_id, puntos_acumulados, usuario_id) 
                           VALUES (?, ?, ?, 0, ?)";
             $stmt = $this->db->prepare($sqlCliente);
@@ -118,7 +109,6 @@ class ClientesModel {
             
             $cliente_id = $this->db->insert_id;
 
-            // Confirmar transacción
             $this->db->commit();
             
             return [
@@ -128,7 +118,6 @@ class ClientesModel {
             ];
 
         } catch (Exception $e) {
-            // Revertir transacción en caso de error
             $this->db->rollback();
             return [
                 'success' => false,
@@ -138,24 +127,18 @@ class ClientesModel {
     }
 
     /**
-     * Crear un cliente a partir de un usuario ya creado
-     * @param int $usuario_id
-     * @param string $nombre
-     * @param string $email
-     * @return array ['success'=>bool,'cliente_id'=>int|'error'=>string]
+     * Crear un nuevo cliente vinculado a un usuario existente
      */
     public function crearClienteDesdeUsuario($usuario_id, $nombre, $email)
     {
         try {
             $this->db->begin_transaction();
 
-            // Obtener el nivel inicial (el de menor puntos)
             $sqlNivel = "SELECT id FROM niveles ORDER BY puntos_minimos ASC LIMIT 1";
             $resultNivel = $this->db->query($sqlNivel);
             $nivel = $resultNivel->fetch_assoc();
             $nivel_id = $nivel['id'] ?? 1;
 
-            // Insertar cliente
             $sqlCliente = "INSERT INTO clientes (nombre, email, nivel_id, puntos_acumulados, usuario_id) VALUES (?, ?, ?, 0, ?)";
             $stmt = $this->db->prepare($sqlCliente);
             if (!$stmt) {
@@ -186,7 +169,6 @@ class ClientesModel {
         try {
             $this->db->begin_transaction();
 
-            // 1. Actualizar tabla clientes
             $sql = "UPDATE clientes SET nombre = ?, email = ? WHERE id = ?";
             $stmt = $this->db->prepare($sql);
             $stmt->bind_param("ssi", $nombre, $email, $id);
@@ -195,7 +177,6 @@ class ClientesModel {
                 throw new Exception("Error al actualizar cliente");
             }
 
-            // 2. Obtener usuario_id del cliente
             $sqlUsuario = "SELECT usuario_id FROM clientes WHERE id = ?";
             $stmt = $this->db->prepare($sqlUsuario);
             $stmt->bind_param("i", $id);
@@ -204,7 +185,6 @@ class ClientesModel {
             $row = $result->fetch_assoc();
             $usuario_id = $row['usuario_id'];
 
-            // 3. Actualizar tabla usuarios si existe usuario vinculado
             if ($usuario_id) {
                 $sqlUpdateUsuario = "UPDATE usuarios SET username = ?, email = ? WHERE id = ?";
                 $stmt = $this->db->prepare($sqlUpdateUsuario);
@@ -228,7 +208,6 @@ class ClientesModel {
         try {
             $this->db->begin_transaction();
 
-            // 1. Obtener usuario_id antes de eliminar el cliente
             $sql = "SELECT usuario_id FROM clientes WHERE id = ?";
             $stmt = $this->db->prepare($sql);
             $stmt->bind_param("i", $id);
@@ -237,7 +216,6 @@ class ClientesModel {
             $row = $result->fetch_assoc();
             $usuario_id = $row['usuario_id'] ?? null;
 
-            // 2. Eliminar cliente (las compras se eliminarán por CASCADE)
             $sql = "DELETE FROM clientes WHERE id = ?";
             $stmt = $this->db->prepare($sql);
             $stmt->bind_param("i", $id);
@@ -246,7 +224,6 @@ class ClientesModel {
                 throw new Exception("Error al eliminar cliente");
             }
 
-            // 3. Eliminar usuario asociado si existe
             if ($usuario_id) {
                 $sql = "DELETE FROM usuarios WHERE id = ?";
                 $stmt = $this->db->prepare($sql);
@@ -267,7 +244,6 @@ class ClientesModel {
      * Obtener siguiente nivel para un cliente
      */
     public function obtenerSiguienteNivel($cliente_id) {
-        // Obtener puntos actuales del cliente
         $sql = "SELECT puntos_acumulados, nivel_id FROM clientes WHERE id = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("i", $cliente_id);
@@ -279,7 +255,6 @@ class ClientesModel {
             return null;
         }
 
-        // Buscar el siguiente nivel
         $sql = "SELECT * FROM niveles 
                 WHERE puntos_minimos > ? 
                 ORDER BY puntos_minimos ASC 

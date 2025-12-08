@@ -1,9 +1,4 @@
 <?php
-/**
- * ClientesController.php
- * Controlador para manejar las operaciones CRUD de clientes
- */
-
 require_once __DIR__ . '/../models/ClientesModel.php';
 
 class ClientesController {
@@ -13,9 +8,6 @@ class ClientesController {
         $this->model = new ClientesModel($database);
     }
 
-    /**
-     * Listar todos los clientes
-     */
     public function listarClientes() {
         $clientes = $this->model->obtenerTodosLosClientes();
         
@@ -26,9 +18,6 @@ class ClientesController {
         ]);
     }
 
-    /**
-     * Obtener un cliente por ID con información adicional
-     */
     public function obtenerCliente($id) {
         $cliente = $this->model->obtenerClientePorId($id);
         
@@ -41,13 +30,9 @@ class ClientesController {
             return;
         }
 
-        // Obtener siguiente nivel
         $siguienteNivel = $this->model->obtenerSiguienteNivel($id);
-        
-        // Contar compras
         $totalCompras = $this->model->contarComprasCliente($id);
         
-        // Calcular compras faltantes para siguiente nivel
         $comprasFaltantes = 0;
         if ($siguienteNivel) {
             $comprasFaltantes = max(0, $siguienteNivel['compras_necesarias'] - $totalCompras);
@@ -63,11 +48,7 @@ class ClientesController {
         ]);
     }
 
-    /**
-     * Crear un nuevo cliente
-     */
     public function crearCliente($datos) {
-        // Validar datos requeridos
         if (empty($datos['nombre']) || empty($datos['email']) || empty($datos['password'])) {
             header('Content-Type: application/json');
             echo json_encode([
@@ -77,7 +58,6 @@ class ClientesController {
             return;
         }
 
-        // Validar formato de email
         if (!filter_var($datos['email'], FILTER_VALIDATE_EMAIL)) {
             header('Content-Type: application/json');
             echo json_encode([
@@ -87,7 +67,6 @@ class ClientesController {
             return;
         }
 
-        // Validar contraseña (mínimo 6 caracteres)
         if (strlen($datos['password']) < 6) {
             header('Content-Type: application/json');
             echo json_encode([
@@ -97,7 +76,6 @@ class ClientesController {
             return;
         }
 
-        // Crear cliente
         $resultado = $this->model->crearCliente(
             $datos['nombre'],
             $datos['email'],
@@ -119,11 +97,7 @@ class ClientesController {
         }
     }
 
-    /**
-     * Actualizar un cliente existente
-     */
     public function actualizarCliente($id, $datos) {
-        // Validar datos
         if (empty($datos['nombre']) || empty($datos['email'])) {
             header('Content-Type: application/json');
             echo json_encode([
@@ -133,7 +107,6 @@ class ClientesController {
             return;
         }
 
-        // Validar formato de email
         if (!filter_var($datos['email'], FILTER_VALIDATE_EMAIL)) {
             header('Content-Type: application/json');
             echo json_encode([
@@ -163,9 +136,6 @@ class ClientesController {
         }
     }
 
-    /**
-     * Eliminar un cliente
-     */
     public function eliminarCliente($id) {
         $resultado = $this->model->eliminarCliente($id);
 
@@ -183,9 +153,6 @@ class ClientesController {
         }
     }
 
-    /**
-     * Obtener clientes por nivel
-     */
     public function listarClientesPorNivel($nivel_id) {
         $clientes = $this->model->obtenerClientesPorNivel($nivel_id);
         
@@ -197,11 +164,10 @@ class ClientesController {
     }
 }
 
-// Manejo de peticiones AJAX
+// Verificar autenticación y rol de admin
 if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET') {
     session_start();
     
-    // Verificar que el usuario sea admin
     if (!isset($_SESSION['user_id']) || $_SESSION['user_rol'] !== 'admin') {
         header('Content-Type: application/json');
         echo json_encode([
@@ -226,8 +192,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET
     }
 
     $controller = new ClientesController($conn);
-    
-    // Determinar la acción a realizar
     $accion = $_POST['accion'] ?? $_GET['accion'] ?? '';
 
     switch ($accion) {

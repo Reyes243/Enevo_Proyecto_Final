@@ -1,5 +1,4 @@
 <?php
-// assets/app/models/CompraModel.php
 
 require_once __DIR__ . '/../config/ConnectionController.php';
 
@@ -13,15 +12,9 @@ class CompraModel
         $this->conn = $connection->connect();
     }
 
-    /**
-     * Registra una compra en la base de datos
-     * @param int $cliente_id ID del cliente
-     * @param int $juego_id ID del juego
-     * @param int $cantidad Cantidad de juegos
-     * @param float $monto Monto total de la compra
-     * @param int $puntos_generados Puntos generados por la compra
-     * @return bool True si se registró correctamente
-     */
+    
+     // Registra una compra en la base de datos
+   
     public function registrarCompra($cliente_id, $juego_id, $cantidad, $monto, $puntos_generados)
     {
         $sql = "INSERT INTO compras (cliente_id, juego_id, cantidad, monto, puntos_generados) 
@@ -33,11 +26,9 @@ class CompraModel
         return $stmt->execute();
     }
 
-    /**
-     * Obtiene el ID del cliente basado en el user_id
-     * @param int $user_id ID del usuario
-     * @return int|null ID del cliente o null si no existe
-     */
+    
+     // Obtiene el ID del cliente basado en el user_id
+     
     public function obtenerClienteId($user_id)
     {
         $sql = "SELECT id FROM clientes WHERE usuario_id = ?";
@@ -53,12 +44,9 @@ class CompraModel
         return null;
     }
 
-    /**
-     * Actualiza los puntos acumulados del cliente
-     * @param int $cliente_id ID del cliente
-     * @param int $puntos_nuevos Puntos a sumar
-     * @return bool True si se actualizó correctamente
-     */
+    
+     //Actualiza los puntos acumulados del cliente
+     
     public function actualizarPuntos($cliente_id, $puntos_nuevos)
     {
         $sql = "UPDATE clientes 
@@ -71,14 +59,11 @@ class CompraModel
         return $stmt->execute();
     }
 
-    /**
-     * Actualiza el nivel del cliente basado en sus puntos acumulados
-     * @param int $cliente_id ID del cliente
-     * @return bool True si se actualizó correctamente
-     */
+    
+     //Actualiza el nivel del cliente basado en sus puntos acumulados
+     
     public function actualizarNivel($cliente_id)
     {
-        // Obtener puntos actuales del cliente
         $sql = "SELECT puntos_acumulados FROM clientes WHERE id = ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("i", $cliente_id);
@@ -92,7 +77,6 @@ class CompraModel
         
         $puntos = $cliente['puntos_acumulados'];
         
-        // Obtener el nivel correspondiente según los puntos
         $sql_nivel = "SELECT id FROM niveles 
                       WHERE puntos_minimos <= ? 
                       ORDER BY puntos_minimos DESC 
@@ -108,7 +92,6 @@ class CompraModel
             return false;
         }
         
-        // Actualizar el nivel del cliente
         $sql_update = "UPDATE clientes SET nivel_id = ? WHERE id = ?";
         $stmt_update = $this->conn->prepare($sql_update);
         $stmt_update->bind_param("ii", $nivel['id'], $cliente_id);
@@ -116,11 +99,9 @@ class CompraModel
         return $stmt_update->execute();
     }
 
-    /**
-     * Obtener puntos acumulados del cliente
-     * @param int $cliente_id
-     * @return int|null
-     */
+    
+     //Obtener puntos acumulados del cliente
+   
     public function obtenerPuntosCliente($cliente_id)
     {
         $sql = "SELECT puntos_acumulados FROM clientes WHERE id = ?";
@@ -134,12 +115,9 @@ class CompraModel
         return null;
     }
 
-    /**
-     * Descontar puntos del cliente (usar cuando se compra con puntos)
-     * @param int $cliente_id
-     * @param int $puntos
-     * @return bool
-     */
+    
+     // Descontar puntos del cliente (usar cuando se compra con puntos)
+    
     public function descontarPuntos($cliente_id, $puntos)
     {
         $sql = "UPDATE clientes SET puntos_acumulados = puntos_acumulados - ? WHERE id = ?";
@@ -148,11 +126,9 @@ class CompraModel
         return $stmt->execute();
     }
 
-    /**
-     * Obtiene el nombre del nivel actual del cliente
-     * @param int $cliente_id ID del cliente
-     * @return string|null Nombre del nivel o null
-     */
+    
+     // Obtiene el nombre del nivel actual del cliente
+    
     public function obtenerNivelCliente($cliente_id)
     {
         $sql = "SELECT n.nombre 
@@ -172,11 +148,9 @@ class CompraModel
         return null;
     }
 
-    /**
-     * Obtiene el historial de compras de un cliente
-     * @param int $user_id ID del usuario
-     * @return array Array con el historial de compras
-     */
+    
+     // Obtiene el historial de compras de un cliente
+   
     public function obtenerHistorialCompras($user_id)
     {
         $cliente_id = $this->obtenerClienteId($user_id);
@@ -205,10 +179,9 @@ class CompraModel
         return $historial;
     }
 
-    /**
-     * Obtiene estadísticas de ventas por juego (para admin)
-     * @return array Array con las ventas por juego
-     */
+    
+     // Obtiene estadísticas de ventas por juego (para admin)
+     
     public function obtenerEstadisticasVentas()
     {
         $sql = "SELECT 
@@ -232,30 +205,22 @@ class CompraModel
         return $ventas;
     }
 
-    /**
-     * Procesa una compra completa del carrito
-     * @param int $user_id ID del usuario
-     * @param array $carrito Array con los items del carrito
-     * @param float $total_monto Monto total de la compra
-     * @return array Resultado de la operación con 'success' y 'message'
-     */
+    
+     // Procesa una compra completa del carrito
+    
     public function procesarCompraCarrito($user_id, $carrito, $total_monto)
     {
-        // Iniciar transacción
         $this->conn->begin_transaction();
         
         try {
-            // Obtener ID del cliente
             $cliente_id = $this->obtenerClienteId($user_id);
             
             if (!$cliente_id) {
                 throw new Exception("Cliente no encontrado");
             }
             
-            // Calcular puntos: 1 punto por cada $10 MXN
             $puntos_generados = floor($total_monto / 10);
             
-            // Registrar cada item del carrito como una compra
             foreach ($carrito as $juego_id => $item) {
                 $monto_item = $item['precio'] * $item['cantidad'];
                 $puntos_item = floor($monto_item / 10);
@@ -269,13 +234,10 @@ class CompraModel
                 );
             }
             
-            // Actualizar puntos del cliente
             $this->actualizarPuntos($cliente_id, $puntos_generados);
             
-            // Actualizar nivel del cliente
             $this->actualizarNivel($cliente_id);
             
-            // Confirmar transacción
             $this->conn->commit();
             
             return [
@@ -285,7 +247,6 @@ class CompraModel
             ];
             
         } catch (Exception $e) {
-            // Revertir transacción en caso de error
             $this->conn->rollback();
             
             return [
@@ -295,16 +256,11 @@ class CompraModel
         }
     }
 
-    /**
-     * Procesar compra usando puntos del cliente
-     * @param int $user_id
-     * @param array $carrito
-     * @param int $puntos_requeridos
-     * @return array
-     */
+    
+     //Procesar compra usando puntos del cliente
+     
     public function procesarCompraCarritoConPuntos($user_id, $carrito, $puntos_requeridos)
     {
-        // Iniciar transacción
         $this->conn->begin_transaction();
 
         try {
@@ -313,7 +269,6 @@ class CompraModel
                 throw new Exception("Cliente no encontrado");
             }
 
-            // Registrar cada item como compra con monto 0 y puntos_generados 0
             foreach ($carrito as $juego_id => $item) {
                 $monto_item = 0;
                 $puntos_item = 0;
@@ -327,10 +282,8 @@ class CompraModel
                 );
             }
 
-            // Descontar puntos del cliente
             $this->descontarPuntos($cliente_id, $puntos_requeridos);
 
-            // Actualizar nivel del cliente
             $this->actualizarNivel($cliente_id);
 
             $this->conn->commit();

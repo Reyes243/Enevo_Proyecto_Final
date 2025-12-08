@@ -7,9 +7,9 @@ class UserModel {
         $this->conn = $conn;
     }
 
-    /**
-     * Eliminar usuario por id (util para rollback)
-     */
+    
+     // Eliminar usuario por id (util para rollback)
+     
     public function deleteUserById($id)
     {
         try {
@@ -26,9 +26,9 @@ class UserModel {
         }
     }
 
-    /**
-     * Crea un nuevo usuario
-     */
+    
+     //Crea un nuevo usuario
+     
     public function createUser($nombre, $email, $password) {
         try {
             $hash = password_hash($password, PASSWORD_DEFAULT);
@@ -49,7 +49,6 @@ class UserModel {
             $stmt->bind_param("ssss", $nombre, $email, $hash, $rol);
             $result = $stmt->execute();
             
-            // Capturar error de duplicación
             if (!$result) {
                 $errno = $stmt->errno;
                 $error_msg = $stmt->error;
@@ -82,9 +81,9 @@ class UserModel {
         }
     }
 
-    /**
-     * Obtiene usuario por email
-     */
+    
+     //Obtiene usuario por email
+     
     public function getUserByEmail($email) {
         try {
             $sql = "SELECT 
@@ -130,9 +129,9 @@ class UserModel {
         }
     }
     
-    /**
-     * Verifica si existe un username
-     */
+    
+    // Verifica si existe un username
+     
     public function usernameExists($username) {
         try {
             $sql = "SELECT id FROM {$this->table} WHERE username = ? LIMIT 1";

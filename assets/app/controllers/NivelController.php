@@ -33,7 +33,6 @@ class NivelController {
         exit();
     }
 
-    /** GET ALL */
     public function getAllNiveles(){
         try{
             $niveles = $this->nivelModel->getAllNiveles();
@@ -43,7 +42,6 @@ class NivelController {
         }
     }
 
-    /** GET BY ID */
     public function getNivelById($id){
         if(!$id || !is_numeric($id))
             $this->sendJson(['success'=>false,'error'=>'invalid_id']);
@@ -56,25 +54,21 @@ class NivelController {
         $this->sendJson(['success'=>true,'data'=>$nivel]);
     }
 
-    /** CREATE */
     public function createNivel($nombre,$puntos,$compras,$descripcion){
         $result = $this->nivelModel->createNivel($nombre,$puntos,$compras,$descripcion);
         $this->sendJson($result);
     }
 
-    /** UPDATE */
     public function updateNivel($id,$nombre,$puntos,$compras,$descripcion){
         $result = $this->nivelModel->updateNivel($id,$nombre,$puntos,$compras,$descripcion);
         $this->sendJson($result);
     }
 
-    /** DELETE */
     public function deleteNivel($id){
         $result = $this->nivelModel->deleteNivel($id);
         $this->sendJson($result);
     }
 
-    /** CLIENTES POR NIVEL */
     public function clientesByNivel($id){
         if(!$id || !is_numeric($id)){
             $this->sendJson(['success'=>false,'data'=>[]]);

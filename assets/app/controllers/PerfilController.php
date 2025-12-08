@@ -9,7 +9,6 @@ class PerfilController {
     }
 
     public function mostrarPerfil($usuario_id) {
-        // Obtener datos del perfil
         $perfil = $this->model->obtenerPerfil($usuario_id);
         
         if (!$perfil) {
@@ -23,11 +22,9 @@ class PerfilController {
             ];
         }
 
-        // Obtener siguiente nivel
         $puntos_actuales = $perfil['puntos_acumulados'] ?? 0;
         $proximo_nivel = $this->model->obtenerSiguienteNivel($puntos_actuales);
         
-        // Calcular compras faltantes para el siguiente nivel
         $compras_faltantes = 0;
         if ($proximo_nivel) {
             $compras_actuales = $perfil['total_compras'] ?? 0;
