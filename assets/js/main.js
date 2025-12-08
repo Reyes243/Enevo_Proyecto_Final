@@ -6,29 +6,22 @@ document.addEventListener("DOMContentLoaded", function () {
   const error = urlParams.get("error");
   const registered = urlParams.get("registered");
 
-  // Mensajes para errores del servidor
   const errorMessages = {
-    // Errores de registro
     empty: "Todos los campos son obligatorios",
     invalid_email: "El formato del correo no es válido",
     weak_password: "La contraseña debe tener al menos 6 caracteres",
     password_mismatch: "Las contraseñas no coinciden",
-    email_exists: "⚠️ Este correo electrónico ya está registrado",
-    username_exists: "⚠️ Este nombre de usuario ya existe",
-    duplicate_data: "⚠️ El correo o nombre de usuario ya están en uso",
+    email_exists: "Este correo electrónico ya está registrado",
+    username_exists: "Este nombre de usuario ya existe",
+    duplicate_data: "El correo o nombre de usuario ya están en uso",
     database: "Error de base de datos. Intenta nuevamente",
     register_failed: "No se pudo completar el registro",
-
-    // Errores de login
     login: "Correo o contraseña incorrectos",
-
-    // Errores generales
     server: "Error del servidor. Intenta más tarde",
     connection: "No se pudo conectar a la base de datos",
     invalid_action: "Acción no válida",
   };
 
-  // Mostrar mensaje de error si existe
   if (error && errorMessages[error]) {
     const alertDiv = document.createElement("div");
     alertDiv.className = "alert-error";
@@ -64,12 +57,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 5000);
   }
 
-  // Mostrar mensaje de éxito en registro
   if (registered === "1") {
     const successDiv = document.createElement("div");
     successDiv.className = "alert-success";
     successDiv.innerHTML = `
-      <span>✓ Registro exitoso. Ya puedes iniciar sesión</span>
+      <span>Registro exitoso. Ya puedes iniciar sesión</span>
       <button class="alert-close">&times;</button>
     `;
 
@@ -99,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ===========================================================
-  //                    VALIDACIÓN LOGIN
+  //                     VALIDACIÓN LOGIN
   // ===========================================================
   const loginForm = document.querySelector(
     '.login-box form[action*="AuthController.php"][method="POST"]'
@@ -258,26 +250,23 @@ document.addEventListener("DOMContentLoaded", function () {
     logoutBtn.addEventListener("click", function (e) {
       e.preventDefault();
 
-      // Limpiar localStorage
       sessionStorage.removeItem("Usuario");
       localStorage.removeItem("Usuario");
       localStorage.removeItem("usuarioLogeado");
 
-      // Redirigir al logout de PHP
       window.location.href = "../assets/app/controllers/LogoutController.php";
     });
   }
 
   // ===========================================================
-  //          MODAL DE CARRITO (SOLO INDEX.HTML)
+  //           MODAL DE CARRITO (SOLO INDEX.HTML)
   // ===========================================================
-  // GLOBAL NOTIFICATION (inject once)
-  (function insertGlobalNotification(){
-    if (document.getElementById('globalNotification')) return;
+  (function insertGlobalNotification() {
+    if (document.getElementById("globalNotification")) return;
 
-    const modal = document.createElement('div');
-    modal.id = 'globalNotification';
-    modal.className = 'modal oculto';
+    const modal = document.createElement("div");
+    modal.id = "globalNotification";
+    modal.className = "modal oculto";
     modal.innerHTML = `
       <div class="modal-content notification-content">
         <p id="globalNotificationMessage">Mensaje de notificación</p>
@@ -291,85 +280,99 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.body.appendChild(modal);
 
-    // close handler
-    document.getElementById('globalCloseBtn').addEventListener('click', function(){
-      document.getElementById('globalNotification').classList.add('oculto');
-    });
+    document
+      .getElementById("globalCloseBtn")
+      .addEventListener("click", function () {
+        document.getElementById("globalNotification").classList.add("oculto");
+      });
   })();
 
-  // helper to show global notification
-  window.showNotification = function(options){
-    // options: {message, primaryText, primaryHref, onPrimary, type, autoHide}
-    const modal = document.getElementById('globalNotification');
-    const msg = document.getElementById('globalNotificationMessage');
-    const primary = document.getElementById('globalPrimaryBtn');
+  window.showNotification = function (options) {
+    const modal = document.getElementById("globalNotification");
+    const msg = document.getElementById("globalNotificationMessage");
+    const primary = document.getElementById("globalPrimaryBtn");
 
-    msg.textContent = options.message || '';
+    msg.textContent = options.message || "";
 
-    const secondary = document.getElementById('globalSecondaryBtn');
+    const secondary = document.getElementById("globalSecondaryBtn");
 
-    // Primary button
     if (options.primaryText) {
       primary.textContent = options.primaryText;
       if (options.primaryHref) {
-        primary.setAttribute('href', options.primaryHref);
+        primary.setAttribute("href", options.primaryHref);
         primary.onclick = null;
-      } else if (typeof options.onPrimary === 'function') {
-        primary.setAttribute('href', '#');
-        primary.onclick = function(e){ e.preventDefault(); options.onPrimary(); };
+      } else if (typeof options.onPrimary === "function") {
+        primary.setAttribute("href", "#");
+        primary.onclick = function (e) {
+          e.preventDefault();
+          options.onPrimary();
+        };
       } else {
-        primary.setAttribute('href', '#');
-        primary.onclick = function(e){ e.preventDefault(); document.getElementById('globalNotification').classList.add('oculto'); };
+        primary.setAttribute("href", "#");
+        primary.onclick = function (e) {
+          e.preventDefault();
+          document.getElementById("globalNotification").classList.add("oculto");
+        };
       }
-      primary.style.display = '';
+      primary.style.display = "";
     } else {
-      primary.style.display = 'none';
+      primary.style.display = "none";
     }
 
-    // Secondary button (optional)
     if (options.secondaryText) {
       secondary.textContent = options.secondaryText;
       if (options.secondaryHref) {
-        secondary.setAttribute('href', options.secondaryHref);
+        secondary.setAttribute("href", options.secondaryHref);
         secondary.onclick = null;
-      } else if (typeof options.onSecondary === 'function') {
-        secondary.setAttribute('href', '#');
-        secondary.onclick = function(e){ e.preventDefault(); options.onSecondary(); };
+      } else if (typeof options.onSecondary === "function") {
+        secondary.setAttribute("href", "#");
+        secondary.onclick = function (e) {
+          e.preventDefault();
+          options.onSecondary();
+        };
       } else {
-        secondary.setAttribute('href', '#');
-        secondary.onclick = function(e){ e.preventDefault(); document.getElementById('globalNotification').classList.add('oculto'); };
+        secondary.setAttribute("href", "#");
+        secondary.onclick = function (e) {
+          e.preventDefault();
+          document.getElementById("globalNotification").classList.add("oculto");
+        };
       }
-      secondary.style.display = '';
+      secondary.style.display = "";
     } else {
-      secondary.style.display = 'none';
+      secondary.style.display = "none";
     }
 
-
-    const content = modal.querySelector('.modal-content');
-    content.classList.remove('info','success','error');
+    const content = modal.querySelector(".modal-content");
+    content.classList.remove("info", "success", "error");
     if (options.type) content.classList.add(options.type);
 
-    modal.classList.remove('oculto');
+    modal.classList.remove("oculto");
 
     if (options.autoHide) {
-      setTimeout(()=>{ modal.classList.add('oculto'); }, options.autoHide);
+      setTimeout(() => {
+        modal.classList.add("oculto");
+      }, options.autoHide);
     }
   };
 
-
-  document.body.addEventListener('click', function(e){
-    const target = e.target.closest('.btn-carrito');
+  document.body.addEventListener("click", function (e) {
+    const target = e.target.closest(".btn-carrito");
     if (!target) return;
 
-
-    const isLogged = !!localStorage.getItem('usuarioLogeado') || !!sessionStorage.getItem('Usuario');
+    const isLogged =
+      !!localStorage.getItem("usuarioLogeado") ||
+      !!sessionStorage.getItem("Usuario");
     if (!isLogged) {
       e.preventDefault();
-      const loginHref = (location.pathname && location.pathname.split('/').length > 2) ? 'views/login.html' : 'views/login.html';
+      const loginHref =
+        location.pathname && location.pathname.split("/").length > 2
+          ? "views/login.html"
+          : "views/login.html";
       showNotification({
-        message: 'Por favor inicia sesión o regístrate para acceder al carrito.',
-        primaryText: 'Aceptar',
-        type: 'info'
+        message:
+          "Por favor inicia sesión o regístrate para acceder al carrito.",
+        primaryText: "Aceptar",
+        type: "info",
       });
     }
   });

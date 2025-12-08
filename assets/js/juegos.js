@@ -2,20 +2,17 @@
 // JUEGOS.JS - Manejo de juegos dinámicos
 // ============================================
 
-// Esperar a que el DOM esté completamente cargado
 window.addEventListener("DOMContentLoaded", function () {
-  console.log("🎮 Cargando juegos desde la base de datos...");
+  console.log("Cargando juegos desde la base de datos...");
   cargarJuegos();
 });
 
 async function cargarJuegos() {
   try {
-    // Determinar la ruta correcta según la ubicación del archivo
     const isIndexPage =
       window.location.pathname.endsWith("index.html") ||
       window.location.pathname.endsWith("/");
 
-    // Ruta corregida: app está dentro de assets
     const rutaController = isIndexPage
       ? "assets/app/controllers/JuegoController.php?action=getAll"
       : "../assets/app/controllers/JuegoController.php?action=getAll";
@@ -46,19 +43,16 @@ function mostrarJuegos(juegos) {
     return;
   }
 
-  // Limpiar las cards existentes (mantener solo el título)
   const cardsExistentes = novedadesSection.querySelectorAll(".card");
   cardsExistentes.forEach((card) => card.remove());
 
-  // Determinar la ruta de imágenes según la página
   const isIndexPage =
     window.location.pathname.endsWith("index.html") ||
     window.location.pathname.endsWith("/");
   const rutaImg = isIndexPage ? "assets/img/" : "../assets/img/";
 
-  // Crear una card por cada juego
   juegos.forEach((juego) => {
-    const puntos = Math.floor(juego.precio / 50); // 1 punto por cada $50
+    const puntos = Math.floor(juego.precio / 50);
 
     const card = document.createElement("div");
     card.className = "card";
@@ -88,7 +82,6 @@ function mostrarJuegos(juegos) {
     novedadesSection.appendChild(card);
   });
 
-  // Agregar eventos a los botones de "Más detalles"
   agregarEventosDetalles();
 }
 
@@ -98,8 +91,6 @@ function agregarEventosDetalles() {
   botones.forEach((btn) => {
     btn.addEventListener("click", function () {
       const juegoId = this.getAttribute("data-juego-id");
-      // Siempre permitir acceder a la página de detalles; la página de detalles
-      // manejará si el usuario está logueado o no (mostrando notificaciones al intentar añadir)
       redirigirADetalles(juegoId);
     });
   });
@@ -108,15 +99,11 @@ function agregarEventosDetalles() {
 function redirigirADetalles(juegoId) {
   const pathname = window.location.pathname;
 
-  // Detectar en qué página estamos
   if (pathname.includes("principal.php")) {
-    // Vista de cliente
     window.location.href = `MasDetalles.php?id=${juegoId}`;
   } else if (pathname.includes("principalAdmin.php")) {
-    // Vista de admin
     window.location.href = `MasDetallesAdmin.php?id=${juegoId}`;
   } else {
-    // index.html (sin login)
     window.location.href = `views/MasDetallesNoLogin.html?id=${juegoId}`;
   }
 }
@@ -134,7 +121,6 @@ function mostrarMensaje(mensaje) {
   }
 }
 
-// Función para escapar HTML y evitar XSS
 function escapeHtml(text) {
   const div = document.createElement("div");
   div.textContent = text;
